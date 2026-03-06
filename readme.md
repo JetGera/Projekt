@@ -1,5 +1,5 @@
 # About
-
+xZzzZ
 Template for final theses writing at _Technical University of Košice_.
 
 Warning! The encoding of all documents is set to _UTF-8_! So don't forget to set up your environment in which you will write your thesis to use this encoding!
