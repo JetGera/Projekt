@@ -1,17 +1,20 @@
 % !TEX root = ../thesis.tex
 
-\chapter{Úvod}\label{ch:introduction}
+\chapter{Požiadavky na systém}
 
-Úvod práce stručne opisuje stanovený problém, kontext problému a motiváciu pre riešenie problému. Z úvodu by malo byť jasné, že stanovený problém doposiaľ nie je vyriešený a má zmysel ho riešiť.
+Táto kapitola vymedzuje základné požiadavky na navrhovaný informačný systém pre distribúciu pitnej a úžitkovej vody vrátane evidencie revízií filtračných zariadení. Zameriava sa na opis problému, motiváciu riešenia a formuláciu hlavných cieľov systému tak, aby bolo zrejmé, aké funkcie má riešenie poskytovať a aké prínosy sa od jeho nasadenia očakávajú. Požiadavky uvedené v tejto kapitole zároveň vytvárajú východisko pre návrh architektúry systému, evidenciu údajov, podporu monitorovania a následné vyhodnotenie navrhnutého riešenia.
 
-V úvode neuvádzajte štruktúru práce, t.j. o čom je ktorá kapitola. Rozsah úvodu je minimálne 2 celé strany (vrátane formulácie úlohy).
+\section{Problém a motivácia}
 
-\section{Motivácia}
+Vodárenské organizácie spravujú veľké množstvo aktív a prevádzkových dát; často využívajú viacero informačných systémov a dáta bývajú rozptýlené medzi oddeleniami, čo sťažuje ich spojenie do použiteľnej informácie \cite{CarricoFerreira2021}. Zároveň legislatíva Európskej únie aj Slovenskej republiky kladie dôraz na systematický monitoring a riadenie rizík v celom reťazci zásobovania pitnou vodou \cite{EUDWD2020,SKVyhlaska912023} a monitoring môže zahŕňať veľmi veľký rozsah ukazovateľov \cite{UVZPitnaVodaMapy}. Motiváciou práce je vytvoriť jednotnú a auditovateľnú evidenciu revízií filtračných zariadení, ktorá bude zahŕňať termíny, výsledky, protokoly aj nápravné opatrenia, s cieľom znížiť riziko zmeškaných činností a zrýchliť orientáciu pri kontrole alebo incidente.
 
-Motivácia vychádza z opisu nedostatkov a predpokladaných prínosov riešenia stanoveného problému, t.j. čo dnes nefunguje tak, ako by mohlo a ako predpokladám, že sa to mojim riešením zlepší.
-Motivácia nesmie byť, že ste to dostali ako zadanie, alebo že ste sa chceli zapojiť do súťaže resp., že je to zaujímavá téma.
+\section{Hlavné ciele systému}
 
+\begin{enumerate}[label=\arabic*.]
+\item Systém musí poskytovať jednotný register prvkov distribúcie vody a filtračných zariadení vrátane identifikácie, umiestnenia, parametrov a stavu.
+\item Systém musí umožniť plánovať a evidovať revízie filtračných zariadení vrátane termínu, vykonávateľa, výsledku, protokolu alebo prílohy a nápravného opatrenia s históriou zmien.
+\item Systém musí podporiť evidenciu udalostí, ako sú porucha, zásah alebo zistenie, a ich prepojenie na riziká a monitoring v duchu rizikovo orientovaného prístupu \cite{EUDWD2020,SKVyhlaska912023}.
+\item Systém musí automaticky zobrazovať zoznam revízií pred termínom a po termíne a generovať upozornenia pre zodpovedné osoby.
+\item Systém musí generovať exportovateľné prehľady, napríklad vo formáte PDF alebo CSV, o revíziách, zisteniach a nápravných opatreniach pre manažérsku kontrolu a audit.
+\end{enumerate}
 
-\section{Formulácia úlohy}
-
-V rámci úvodu tiež vysvetlite vaše chápanie úlohy, ktorú budete riešiť. Prvú verziu tejto časti by ste mali napísať čo najskôr, aby ste sa uistili, že rozumiete, čo je cieľom vašej práce, a prekonzultovali ju so školiteľom. Neskôr v priebehu práce na projekte ju môžete spresňovať a dopĺňať.

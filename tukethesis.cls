@@ -296,6 +296,20 @@
     \renewcommand{\@author@postfix}{#1}
 }
 
+\newcommand{\@authorfullname}{%
+    \ifx\@author@prefix\@empty\else\@author@prefix\space\fi%
+    \@author@firstname%
+    \ifx\@author@lastname\@empty\else\space\@author@lastname\fi%
+    \ifx\@author@postfix\@empty\else\space\@author@postfix\fi%
+}
+
+\newcommand{\@authorblock}{%
+    \parbox[t]{0.42\textwidth}{%
+        \raggedright
+        \@authorfullname%
+    }%
+}
+
 
 % DOCVAR: college (The name of the thesis writer's college)
 \newcommand{\@college@en}{Technical University of Košice}
@@ -442,8 +456,7 @@
     \pagenumbering{roman}
     \pagestyle{empty}  % no page numbers until TOC
     \frontpage
-    \titlepage
-    % \abstractpage
+    \abstractpage
 
     % thesis detail specification
     % \@thesisspec
@@ -522,7 +535,7 @@
     \vfill
 
     \begin{center}
-        {\Large \textbf{\@submissionyear}} \hfill {\Large \textbf{\@author@prefix~\@author@firstname~\@author@lastname~\@author@postfix}}
+        {\Large \textbf{\@submissionyear}} \hfill {\Large \bfseries \@authorblock}
     \end{center}
 
     \newpage
@@ -571,12 +584,6 @@
             \@keywords
         \end{otherlanguage}
     }
-
-    \vfill
-
-    \subsection*{\bibcitationname}
-
-    \MakeUppercase\@author@lastname, \@author@firstname. {\itshape \@title}. \@college@city: \@college, \@faculty, \@submissionyear. \pageref{theend}~\pageabbr{} \supervisorcitationname: \@supervisor
 
     \newpage
 
@@ -658,7 +665,7 @@
 
     \begin{center}
         \centering
-        {\Large \textbf{\@college@city{} \@submissionyear}} \hfill {\Large \textbf{\@author@prefix~\@author@firstname~\@author@lastname~\@author@postfix}}
+        {\Large \textbf{\@college@city{} \@submissionyear}} \hfill {\Large \bfseries \@authorblock}
     \end{center}
 
     \newpage
