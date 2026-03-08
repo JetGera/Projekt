@@ -1,10 +1,14 @@
 % !TEX root = ../thesis.tex
 
-\chapter{Funkčné požiadavky}\label{ch:functional-requirements}
+\chapter{Požiadavky na systém}\label{ch:functional-requirements}
 
 Táto kapitola formuluje počiatočné funkčné požiadavky na navrhovaný informačný systém. Požiadavky sú rozdelené do logických blokov a sú písané stručne, aby boli jednoznačné pre návrh, implementáciu aj testovanie.
 
-\section{Evidencia zariadení}
+\section{Funkčné požiadavky}
+
+Funkčné požiadavky určujú, aké činnosti má systém vykonávať a aké procesy prevádzky má pokrývať. Tento blok slúži ako základ pre návrh jednotlivých modulov aplikácie a pre následné overenie, či riešenie plní očakávané funkcie.
+
+\subsection{Evidencia zariadení}
 
 \begin{enumerate}
 \item Systém musí umožniť založiť kartu zariadenia s minimálne týmito údajmi: identifikátor, typ, umiestnenie, stav a dátum uvedenia do prevádzky.
@@ -13,7 +17,7 @@ Táto kapitola formuluje počiatočné funkčné požiadavky na navrhovaný info
 \item Systém musí evidovať väzby medzi zariadeniami (napr. zariadenie a jeho komponenty).
 \end{enumerate}
 
-\section{Revízie}
+\subsection{Revízie}
 
 \begin{enumerate}
 \item Systém musí umožniť naplánovať revíziu zariadenia s termínom, rozsahom a pridelenou zodpovednou osobou.
@@ -22,7 +26,7 @@ Táto kapitola formuluje počiatočné funkčné požiadavky na navrhovaný info
 \item Systém musí označiť revízie po termíne a zobraziť ich v samostatnom prehľade.
 \end{enumerate}
 
-\section{Servis}
+\subsection{Servis}
 
 \begin{enumerate}
 \item Systém musí umožniť založiť servisný zásah pre zariadenie na základe poruchy, revízie alebo manuálne.
@@ -31,7 +35,7 @@ Táto kapitola formuluje počiatočné funkčné požiadavky na navrhovaný info
 \item Systém musí prepojiť servisný zásah s konkrétnou revíziou alebo incidentom, ak taká väzba existuje.
 \end{enumerate}
 
-\section{Notifikácie}
+\subsection{Notifikácie}
 
 \begin{enumerate}
 \item Systém musí automaticky odoslať notifikáciu pred plánovaným termínom revízie.
@@ -40,11 +44,26 @@ Táto kapitola formuluje počiatočné funkčné požiadavky na navrhovaný info
 \item Systém musí umožniť konfiguráciu príjemcov notifikácií podľa roly alebo zodpovednosti za zariadenie.
 \end{enumerate}
 
-\section{Reporty}
+\subsection{Reporty}
 
 \begin{enumerate}
 \item Systém musí umožniť vygenerovať report revízií za zvolené obdobie.
 \item Systém musí umožniť vygenerovať report servisných zásahov podľa typu zariadenia, lokality a stavu.
 \item Systém musí umožniť export reportov minimálne do formátov PDF a CSV.
 \item Systém musí umožniť uložiť report do archívu a spätne ho dohľadať podľa dátumu a typu reportu.
+\end{enumerate}
+
+\section{Nefunkčné požiadavky}
+
+Nefunkčné požiadavky definujú kvalitatívne vlastnosti systému, teda podmienky, za akých majú byť funkcie poskytované. Tento blok je dôležitý pre zabezpečenie bezpečnosti, spoľahlivosti, použiteľnosti a dlhodobej prevádzkovateľnosti navrhnutého riešenia.
+
+\begin{enumerate}
+\item Systém musí poskytovať responzívne webové rozhranie použiteľné minimálne na desktopových aj mobilných zariadeniach.
+\item Systém musí vyžadovať autentifikáciu používateľa a autorizáciu prístupu podľa pridelenej roly.
+\item Systém musí zabezpečiť šifrovaný prenos dát medzi klientom a serverom pomocou protokolu HTTPS.
+\item Systém musí zaznamenávať dôležité operácie používateľov do auditného záznamu tak, aby bolo možné spätne overiť vykonané zmeny.
+\item Systém musí byť navrhnutý tak, aby podporoval pravidelné zálohovanie dát a obnovu po zlyhaní.
+\item Systém musí poskytovať stabilnú prevádzku pri bežnej súbežnej práci viacerých používateľov bez straty údajov.
+\item Systém musí umožniť export údajov v štandardných formátoch tak, aby boli použiteľné v ďalších nástrojoch organizácie.
+\item Systém musí byť navrhnutý modulárne, aby bolo možné jednoducho rozširovať funkcionalitu o nové typy zariadení, reportov a notifikácií.
 \end{enumerate}
