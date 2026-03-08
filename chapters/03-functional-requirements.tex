@@ -1,0 +1,50 @@
+% !TEX root = ../thesis.tex
+
+\chapter{Funkčné požiadavky}\label{ch:functional-requirements}
+
+Táto kapitola formuluje počiatočné funkčné požiadavky na navrhovaný informačný systém. Požiadavky sú rozdelené do logických blokov a sú písané stručne, aby boli jednoznačné pre návrh, implementáciu aj testovanie.
+
+\section{Evidencia zariadení}
+
+\begin{enumerate}
+\item Systém musí umožniť založiť kartu zariadenia s minimálne týmito údajmi: identifikátor, typ, umiestnenie, stav a dátum uvedenia do prevádzky.
+\item Systém musí umožniť upravovať údaje zariadenia a evidovať históriu vykonaných zmien.
+\item Systém musí umožniť vyhľadávanie a filtrovanie zariadení podľa typu, lokality, stavu a zodpovednej osoby.
+\item Systém musí evidovať väzby medzi zariadeniami (napr. zariadenie a jeho komponenty).
+\end{enumerate}
+
+\section{Revízie}
+
+\begin{enumerate}
+\item Systém musí umožniť naplánovať revíziu zariadenia s termínom, rozsahom a pridelenou zodpovednou osobou.
+\item Systém musí umožniť zaznamenať výsledok revízie vrátane stavu „vyhovel/nevyhovel“, poznámky a príloh.
+\item Systém musí umožniť viesť úplnú históriu revízií pre každé zariadenie v časovom poradí.
+\item Systém musí označiť revízie po termíne a zobraziť ich v samostatnom prehľade.
+\end{enumerate}
+
+\section{Servis}
+
+\begin{enumerate}
+\item Systém musí umožniť založiť servisný zásah pre zariadenie na základe poruchy, revízie alebo manuálne.
+\item Systém musí evidovať priebeh zásahu: dátum začiatku, dátum ukončenia, vykonané práce, použitý materiál a zodpovednú osobu.
+\item Systém musí umožniť meniť stav zásahu (nový, v riešení, ukončený, zrušený).
+\item Systém musí prepojiť servisný zásah s konkrétnou revíziou alebo incidentom, ak taká väzba existuje.
+\end{enumerate}
+
+\section{Notifikácie}
+
+\begin{enumerate}
+\item Systém musí automaticky odoslať notifikáciu pred plánovaným termínom revízie.
+\item Systém musí automaticky odoslať notifikáciu pri prekročení termínu revízie alebo servisného zásahu.
+\item Systém musí umožniť nastaviť minimálne dva kanály notifikácií: e-mail a interné oznámenie v systéme.
+\item Systém musí umožniť konfiguráciu príjemcov notifikácií podľa roly alebo zodpovednosti za zariadenie.
+\end{enumerate}
+
+\section{Reporty}
+
+\begin{enumerate}
+\item Systém musí umožniť vygenerovať report revízií za zvolené obdobie.
+\item Systém musí umožniť vygenerovať report servisných zásahov podľa typu zariadenia, lokality a stavu.
+\item Systém musí umožniť export reportov minimálne do formátov PDF a CSV.
+\item Systém musí umožniť uložiť report do archívu a spätne ho dohľadať podľa dátumu a typu reportu.
+\end{enumerate}
