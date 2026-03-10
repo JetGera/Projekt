@@ -55,15 +55,120 @@ Funkčné požiadavky určujú, aké činnosti má systém vykonávať a aké pr
 
 \section{Nefunkčné požiadavky}
 
-Nefunkčné požiadavky definujú kvalitatívne vlastnosti systému, teda podmienky, za akých majú byť funkcie poskytované. Tento blok je dôležitý pre zabezpečenie bezpečnosti, spoľahlivosti, použiteľnosti a dlhodobej prevádzkovateľnosti navrhnutého riešenia.
+Nefunkčné požiadavky určujú podmienky, za akých majú byť funkcie systému poskytované, a zabezpečujú kvalitu, spoľahlivosť a bezpečnosť riešenia.
 
-\begin{enumerate}
-\item Systém musí poskytovať responzívne webové rozhranie použiteľné minimálne na desktopových aj mobilných zariadeniach.
-\item Systém musí vyžadovať autentifikáciu používateľa a autorizáciu prístupu podľa pridelenej roly.
-\item Systém musí zabezpečiť šifrovaný prenos dát medzi klientom a serverom pomocou protokolu HTTPS.
-\item Systém musí zaznamenávať dôležité operácie používateľov do auditného záznamu tak, aby bolo možné spätne overiť vykonané zmeny.
-\item Systém musí byť navrhnutý tak, aby podporoval pravidelné zálohovanie dát a obnovu po zlyhaní.
-\item Systém musí poskytovať stabilnú prevádzku pri bežnej súbežnej práci viacerých používateľov bez straty údajov.
-\item Systém musí umožniť export údajov v štandardných formátoch tak, aby boli použiteľné v ďalších nástrojoch organizácie.
-\item Systém musí byť navrhnutý modulárne, aby bolo možné jednoducho rozširovať funkcionalitu o nové typy zariadení, reportov a notifikácií.
-\end{enumerate}
+\subsection{Bezpečnosť (Security)}
+
+Systém musí garantovať ochranu dát a bezpečný prístup k informáciám:
+
+\begin{itemize}
+    \item \textbf{Autentifikácia a autorizácia} -- Systém musí vyžadovať autentifikáciu používateľa a autorizáciu prístupu podľa pridelenej roly (administrátor, správca siete, technik, revízny pracovník, manažér).
+    \item \textbf{Šifrovaný prenos dát} -- Systém musí zabezpečiť šifrovaný prenos dát medzi klientom a serverom pomocou protokolu HTTPS.
+    \item \textbf{Auditný záznam} -- Systém musí zaznamenávať dôležité operácie používateľov do auditného záznamu tak, aby bolo možné spätne overiť vykonané zmeny.
+    \item \textbf{Zabezpečená správa prístupových práv} -- Systém musí umožniť centrálnu správu používateľov, ich rolí a prístupových práv.
+\end{itemize}
+
+\subsection{Dostupnosť a výkon}
+
+Systém musí byť používateľsky prístupný, spoľahlivý a výkonný:
+
+\begin{itemize}
+    \item \textbf{Responzívne webové rozhranie} -- Systém musí poskytovať responzívne webové rozhranie použiteľné minimálne na desktopových aj mobilných zariadeniach.
+    \item \textbf{Stabilná prevádzka} -- Systém musí poskytovať stabilnú prevádzku pri bežnej súbežnej práci viacerých používateľov bez straty dát.
+    \item \textbf{Pravidelné zálohovanie dát} -- Systém musí byť navrhnutý tak, aby podporoval pravidelné zálohovanie dát.
+    \item \textbf{Obnova po zlyhaní} -- Systém musí umožniť obnovu po zlyhaní bez straty kritických informácií.
+\end{itemize}
+
+\subsection{Archivácia a export dát}
+
+Systém musí zabezpečiť dlhodobé uchovávanie údajov a kompatibilitu s ďalšími nástrojmi:
+
+\begin{itemize}
+    \item \textbf{Export reportov} -- Systém musí umožniť export reportov minimálne do formátov PDF a CSV.
+    \item \textbf{Uchovávanie histórie} -- Systém musí uchovávať históriu zmien zariadení, revízií a servisných zásahov.
+    \item \textbf{Archivácia protokolov} -- Systém musí umožniť uložiť report do archívu a spätne ho dohľadať podľa dátumu a typu reportu.
+    \item \textbf{Kompatibilita} -- Systém musí umožniť export dát v štandardných formátoch tak, aby boli použiteľné v ďalších nástrojoch organizácie (napr. GIS, SCADA, CMMS).
+\end{itemize}
+
+\subsection{Rozšíriteľnosť a údržba}
+
+Systém musí byť flexibilný a pripravený na budúce rozšírenia:
+
+\begin{itemize}
+    \item \textbf{Modulárny návrh} -- Systém musí byť navrhnutý modulárne, aby bolo možné jednoducho rozširovať funkcionalitu o nové typy zariadení, reportov a notifikácií.
+    \item \textbf{Podpora nových typov zariadení} -- Systém musí umožniť pridávanie nových typov filtračných a distribučných zariadení bez nutnosti zásadných zmien architektúry.
+    \item \textbf{Flexibilná konfigurácia notifikácií a reportov} -- Systém musí umožniť nastavenie vlastných pravidiel pre notifikácie a generovanie špecifických reportov.
+    \item \textbf{Integrácia s existujúcimi systémami} -- Systém musí umožniť integráciu s existujúcimi systémami prevádzkovanými vo vodárenskej organizácii (napr. SCADA, GIS databázy, CMMS/EAM).
+\end{itemize}
+
+
+\section{Používatelia systému (Aktéri)}
+
+Systém je určený pre viacero skupín používateľov s odlišnými úlohami a oprávneniami. Každá rola zodpovedá špecifickým potrebám pri správe distribučnej infraštruktúry a evidencii revízií.
+
+\subsection{Administrátor}
+
+Administrátor je zodpovedný za správu celého systému a jeho používateľov:
+
+\begin{itemize}
+    \item Spravuje používateľské účty a priradenie rolí.
+    \item Nastavuje prístupové práva jednotlivým používateľom alebo skupinám.
+    \item Konfiguruje systémové parametre (notifikácie, integrácie, reporty).
+    \item Monitoruje auditné záznamy a zabezpečuje súlad s internými bezpečnostnými politikami.
+\end{itemize}
+
+\subsection{Správca siete}
+
+Správca siete zabezpečuje plynulú prevádzku distribučnej infraštruktúry:
+
+\begin{itemize}
+    \item Eviduje zariadenia (pumpy, filtre, ventily, meracie zariadenia).
+    \item Plánuje revízie a priradí zodpovedné osoby.
+    \item Monitoruje stav zariadení a sleduje históriu zmien.
+    \item Vytvára prevádzkové reporty a vyhodnocuje technický stav infraštruktúry.
+\end{itemize}
+
+\subsection{Technik}
+
+Technik vykonáva servisné zásahy a údržbu zariadení:
+
+\begin{itemize}
+    \item Zaznamenáva servisné zásahy, opravy a výmeny komponentov.
+    \item Dokumentuje použitý materiál a čas potrebný na vykonanie práce.
+    \item Aktualizuje stav zariadenia po vykonaní údržby.
+    \item Reaguje na notifikácie o poruchách alebo neplánovaných udalostiach.
+\end{itemize}
+
+\subsection{Revízny pracovník}
+
+Revízny pracovník vykonáva pravidelné revízie filtračných zariadení:
+
+\begin{itemize}
+    \item Vykonáva revízie podľa harmonogramu a legislatívnych požiadaviek.
+    \item Vypĺňa revízne protokoly a zaznamenáva zistené nedostatky.
+    \item Navrhuje nápravné opatrenia pri identifikácii problémov.
+    \item Prikladá fotodokumentáciu a ďalšie prílohy k revíznym záznamom.
+\end{itemize}
+
+\subsection{Manažér}
+
+Manažér má strategický prehľad o stave systému a zabezpečuje kontrolu procesov:
+
+\begin{itemize}
+    \item Získava prehľad o celkovom stave zariadení a plnení revíznych termínov.
+    \item Generuje a analyzuje súhrnné reporty pre rozhodovanie a audit.
+    \item Kontroluje dodržiavanie harmonogramov a termínov revízií.
+    \item Sleduje trendy poruchovosti, náklady na údržbu a efektivitu nápravných opatrení.
+\end{itemize}
+
+% \subsection{Pracovný tok používateľov}
+
+% Systém podporuje komplexný pracovný tok, ktorý integruje činnosť všetkých aktérov:
+
+% \begin{enumerate}
+%     \item \textbf{Plánovanie} -- Správca siete naplánuje revízie, priradí zodpovednú osobu a nastaví termíny.
+%     \item \textbf{Notifikácia} -- Systém automaticky odošle notifikáciu pred plánovaným termínom revízie.
+%     \item \textbf{Vykonanie revízie} -- Revízny pracovník vykoná revíziu a zaznamená výsledok do systému (vyhovel/nevyhovel, poznámky, fotodokumentácia).
+%     \item \textbf{Servisný zásah} -- Pri zistení problému systém vytvorí servisný zásah a notifikuje technika, ktorý vykoná opravu a zdokumentuje práce.
+%     \item \textbf{Kontrola a reportovanie} -- Manažér pravidelně kontroluje reporty, overuje dodržiavanie termínov a vyhodnocuje trendy.
+% \end{enumerate}
