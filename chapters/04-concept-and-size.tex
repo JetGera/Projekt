@@ -1,0 +1,159 @@
+% !TEX root = ../thesis.tex
+
+\chapter{Koncept riešenia a odhad veľkosti systému}\label{ch:concept-and-size}
+
+Táto kapitola prepája doteraz definované časti práce do jedného realizovateľného konceptu. Cieľom je zjednotiť víziu riešenia, určiť hlavné moduly systému, odhadnúť ich náročnosť a pripraviť podklad pre prvú iteráciu návrhu a implementácie.
+
+\section{Koncept a vízia riešenia}
+
+Navrhované riešenie predstavuje webový informačný systém pre správu distribúcie pitnej a úžitkovej vody, ktorý centralizuje evidenciu zariadení, revízií, servisných zásahov a súvisiacich dokumentov. Víziou je odstrániť fragmentáciu údajov medzi oddeleniami a nahradiť manuálne evidencie jednotným, auditovateľným a prehľadným pracovným prostredím.
+
+Z pohľadu používateľa je systém navrhnutý ako roly orientovaná platforma:
+
+\begin{itemize}
+\item správca siete plánuje revízie, sleduje termíny a stav zariadení,
+\item technik vykonáva servisné zásahy a zaznamenáva priebeh opráv,
+\item revízny pracovník dokumentuje výsledky kontrol a nápravné opatrenia,
+\item manažér vyhodnocuje reporty, riziká a plnenie termínov,
+\item administrátor riadi prístupy, bezpečnosť a konfiguráciu systému.
+\end{itemize}
+
+Hlavným prínosom konceptu je prepojenie prevádzkových procesov do jedného toku údajov: od evidencie zariadenia, cez plánovanú revíziu, až po servisný zásah a reportovanie pre audit.
+
+\section{Modulový koncept riešenia}
+
+Systém je rozdelený do modulov tak, aby bolo možné riešenie iteratívne implementovať a rozširovať:
+
+\begin{enumerate}[label=\arabic*.]
+\item \textbf{Register zariadení} -- evidencia zariadení, ich parametrov, väzieb a histórie zmien.
+\item \textbf{Revízie a harmonogram} -- plánovanie revízií, evidencia výsledkov, protokolov a termínov.
+\item \textbf{Servis a incidenty} -- založenie zásahu, priebeh riešenia, dokumentácia opráv.
+\item \textbf{Notifikácie} -- upozornenia pred termínom a po termíne, konfigurácia príjemcov.
+\item \textbf{Reporty a export} -- prevádzkové a manažérske výstupy, export do PDF/CSV.
+\item \textbf{Bezpečnosť a audit} -- autentifikácia, autorizácia, auditný log kritických operácií.
+\item \textbf{Integrácie} -- príprava rozhraní pre prepojenie s GIS, SCADA a CMMS/EAM.
+\end{enumerate}
+
+Takto definované moduly umožňujú postupné dodávanie funkcií bez potreby zásadnej zmeny architektúry.
+
+\section{Odhad veľkosti systému}
+
+Pre potreby prvej iterácie bol vytvorený hrubý odhad veľkosti na úrovni modulov. Odhad vyjadruje relatívnu komplexnosť a predpokladaný rozsah implementácie (MVP + základ pre rozšírenie).
+
+\begin{table}[htbp]
+\centering
+\caption{Hrubý odhad veľkosti podľa modulov}
+\label{tab:rough-size-estimate}
+\small
+\begin{tabular}{p{4.2cm} c c p{4.3cm}}
+\toprule
+Modul & Komplexnosť & Odhad SP & Poznámka k rozsahu \\
+\midrule
+Register zariadení & stredná & 18 & CRUD, história zmien, filtrovanie \\
+Revízie a harmonogram & vysoká & 24 & plánovanie, stavy, prílohy, termíny \\
+Servis a incidenty & stredná až vysoká & 20 & workflow zásahov, väzby na revízie \\
+Notifikácie & stredná & 12 & pravidlá, e-mail, interné upozornenia \\
+Reporty a export & stredná & 14 & prehľady, PDF/CSV export \\
+Bezpečnosť a audit & vysoká & 18 & roly, oprávnenia, auditné záznamy \\
+Integrácie (API vrstva) & vysoká & 22 & príprava konektorov, mapovanie dát \\
+\midrule
+\textbf{Spolu} &  & \textbf{128 SP} & hrubý odhad pre jadro systému \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Na základe tabuľky je jadro systému odhadované na približne 128 story points. Pri stabilnej kapacite tímu 28--36 SP na iteráciu to predstavuje 4 až 5 iterácií pre dodanie funkčného jadra vrátane testovania a základnej dokumentácie.
+
+Orientačný objem implementácie pre prvú plnohodnotnú verziu jadra systému je:
+
+\begin{itemize}
+\item \textbf{backend + integrácie}: približne 9\,000 až 13\,000 riadkov kódu,
+\item \textbf{frontend}: približne 4\,000 až 6\,000 riadkov kódu,
+\item \textbf{testy a skripty}: približne 2\,000 až 3\,500 riadkov kódu.
+\end{itemize}
+
+Celkový odhad sa pohybuje v intervale približne 15\,000 až 22\,500 riadkov kódu. Ide o plánovací odhad, ktorý bude spresňovaný po detailnom návrhu databázového modelu, API kontraktov a po implementácii prvých sprintov.
+
+\subsection{Odhad metódou FPA a COCOMO}
+
+Popri modulovom odhade bol pre validáciu veľkosti použitý aj orientačný odhad cez Function Point Analysis (FPA) a model COCOMO.
+
+\begin{itemize}
+\item \textbf{UFP (Unadjusted Function Points)}: 98,
+\item \textbf{VAF (Value Adjustment Factor)}: 46,
+\item \textbf{EAF (Effort Adjustment Factor)} v Intermediate COCOMO: 1,22.
+\end{itemize}
+
+Základný (Basic) COCOMO a Intermediárny (Intermediate) COCOMO poskytli tento orientačný výsledok:
+
+\begin{table}[htbp]
+\centering
+\caption{Zhrnutie odhadu Basic COCOMO a Intermediate COCOMO}
+\label{tab:cocomo-summary}
+\small
+\begin{tabular}{p{4.3cm} c c c c}
+\toprule
+Model & E & D & P & EAF \\
+\midrule
+Basic COCOMO & 28,22 & 8,9 & 4 & -- \\
+Intermediate COCOMO & 45,91 & 10,7 & 5 & 1,22 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Kde $E$ predstavuje odhad námahy (person-month), $D$ trvanie projektu (mesiace), $P$ veľkosť tímu a $EAF$ faktor úpravy námahy. Tento odhad je určený na plánovanie iterácií a kapacít tímu, nie ako pevný záväzný harmonogram.
+
+\subsection{Person-months, veľkosť tímu a náklady}
+
+Nasledujúci výpočet sumarizuje konkrétne hodnoty person-months (PM), odporúčanú veľkosť tímu pri plánovanom trvaní projektu a orientačné náklady.
+
+\begin{itemize}
+\item Z nameraných COCOMO hodnôt: \textbf{Basic COCOMO} $E_{basic}=28{,}22$ PM, \textbf{Intermediate COCOMO} $E_{int}=45{,}91$ PM.
+\item Pre plánovanie používame aj skrátený, praktický odhad z dokumentu: $E_{plan}=29$ PM (okrúhlené / dohoda tímu).
+\item Predpokladané trvanie projektu: $D=9$ mesiacov (ako uvedené v dokumente).
+\end{itemize}
+
+Veľkosť tímu (hrubý odhad) počítame ako $\mathrm{team}=\lceil E / D \rceil$ (zaokrúhlené nahor):
+
+\begin{itemize}
+\item Basic COCOMO: $\mathrm{team}_{basic}=\lceil 28{,}22 / 9 \rceil = 4$ členovia,
+\item Intermediate COCOMO: $\mathrm{team}_{int}=\lceil 45{,}91 / 9 \rceil = 6$ členovia,
+\item Plánový odhad: $\mathrm{team}_{plan}=\lceil 29 / 9 \rceil = 4$ členovia.
+\end{itemize}
+
+Orientačné náklady vychádzajú z uvedeného celkového odhadu v sekcii s COCOMO (87\,000 € pre \~29 PM). Z toho vyplýva cena za 1 PM:
+
+\[
+\mathrm{rate} = \frac{87\,000\,\text{€}}{29\,\text{PM}} \approx 3\,000\,\text{€ / PM}
+\]
+
+Použijeme túto sadzbu pre odhad nákladov pre každú z vybraných možností:
+
+\begin{itemize}
+\item Basic COCOMO (28,22 PM ~ 28 PM): náklady $\approx 28 \times 3\,000 = 84\,000$ €,
+\item Intermediate COCOMO (45,91 PM ~ 46 PM): náklady $\approx 46 \times 3\,000 = 138\,000$ €,
+\item Plánový odhad (29 PM): náklady $\approx 29 \times 3\,000 = 87\,000$ € (zhodné s pôvodným odhadom).
+\end{itemize}
+
+Poznámky a odporúčania:
+\begin{itemize}
+\item Pre konzervatívne plánovanie odporúčame použiť Intermediate COCOMO (46 PM) alebo pridať 15--25\% rezervy k plánovému odhadu 29 PM na riziká integrácií a bezpečnosti.
+\item Navrhovaná štruktúra tímu pre $4$--$6$ členov: 1 projektový/produktový manažér (časť úväzku), 1--2 backend developeri, 1 frontend developer, 1 QA/tester, 1 integračný/DevOps špecialista (pre 6-členný tím možno kombinovať role podľa potreby).
+\item Uvádzané náklady sú orientačné a nezahŕňajú režijné náklady (infra, licencie, externé služby). Pri detailnom rozpočte odporúčame zohľadniť 10--20\% režijnú rezervu.
+\end{itemize}
+
+\section{Výstup pre 1. iteráciu}
+
+Na konci prvej iterácie je cieľom mať pripravený konzistentný balík podkladov pre prezentáciu a ďalší návrh riešenia:
+
+\begin{itemize}
+\item potvrdená téma a abstrakt,
+\item spracovaný aktuálny stav riešenia,
+\item formulované ciele systému,
+\item počiatočné funkčné a nefunkčné požiadavky,
+\item definovaní aktéri a koncept používania,
+\item hrubý odhad veľkosti systému na úrovni modulov,
+\item pripravená prezentácia 1. iterácie v jednotnom štýle.
+\end{itemize}
+
+Tento výstup vytvára spoločný rámec pre tím, znižuje riziko nejednotnej interpretácie požiadaviek a uľahčuje plánovanie nasledujúcich implementačných krokov.
