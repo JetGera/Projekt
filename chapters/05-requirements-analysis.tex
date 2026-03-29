@@ -25,24 +25,40 @@ Tabuľka \ref{tab:functional-requirements-structured} prezentuje funkčné poži
 \subsection{Funkčné požiadavky}
 
 \small
-\begin{longtable}{p{1.3cm} p{5.8cm} p{2.0cm} c p{2.1cm}}
+\begin{longtable}{|p{1.3cm}|p{5.8cm}|p{2.0cm}|c|p{2.1cm}|}
 \caption{Štruktúrovaná tabuľková reprezentácia funkčných požiadaviek}\label{tab:functional-requirements-structured}\\
-\toprule
+\hline
 ID & Popis požiadavky & Klasifikácia & Priorita & Zdroj \\
-\midrule
+\hline
+\endfirsthead
+\hline
+ID & Popis požiadavky & Klasifikácia & Priorita & Zdroj \\
+\hline
+\endhead
 FR-01 & Založenie karty zariadenia s identifikátorom, typom, umiestnením, stavom a dátumom uvedenia do prevádzky. & \shortstack[l]{Evidencia\\zariadení} & 5 & UR \\
+\hline
 FR-02 & Úprava údajov zariadenia s evidenciou histórie zmien. & \shortstack[l]{Evidencia\\zariadení} & 5 & UR \\
+\hline
 FR-03 & Vyhľadávanie a filtrovanie zariadení podľa typu, lokality, stavu a zodpovednej osoby. & \shortstack[l]{Evidencia\\zariadení} & 4 & UR \\
+\hline
 FR-04 & Plánovanie revízie zariadenia s termínom, rozsahom a pridelenou zodpovednou osobou. & Revízie & 5 & CR \\
+\hline
 FR-05 & Záznam výsledku revízie vrátane stavu, poznámky a príloh. & Revízie & 5 & CR \\
+\hline
 FR-06 & Zobrazenie histórie revízií zariadenia v časovom poradí. & Revízie & 4 & CR \\
+\hline
 FR-07 & Založenie servisného zásahu na základe poruchy, revízie alebo manuálne. & Servis & 5 & UR \\
+\hline
 FR-08 & Evidencia priebehu servisného zásahu vrátane vykonaných prác, použitého materiálu a zodpovednej osoby. & Servis & 4 & UR \\
+\hline
 FR-09 & Automatické odoslanie notifikácie pred plánovaným termínom revízie. & Notifikácie & 4 & CR \\
+\hline
 FR-10 & Automatické odoslanie notifikácie pri prekročení termínu revízie alebo servisného zásahu. & Notifikácie & 4 & CR \\
+\hline
 FR-11 & Generovanie reportu revízií za zvolené obdobie. & Reporty & 4 & UR \\
+\hline
 FR-12 & Export reportov minimálne do formátov PDF a CSV. & Reporty & 3 & SR \\
-\bottomrule
+\hline
 \end{longtable}
 
 \noindent
