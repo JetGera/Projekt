@@ -20,7 +20,7 @@ V tejto kapitole je každá požiadavka opísaná prostredníctvom nasledujúcic
 \item \textbf{Zdroj}: označenie pôvodu požiadavky (UR/SR) podľa jej charakteru.
 \end{itemize}
 
-Tabuľka \ref{tab:functional-requirements-structured} prezentuje funkčné požiadavky identifikované v predchádzajúcej kapitole a pripravuje podklad pre nadväzujúcu analýzu nefunkčných požiadaviek.
+Tabuľka \ref{tab:functional-requirements-structured} prezentuje funkčné požiadavky identifikované v predchádzajúcej kapitole. Tabuľka \ref{tab:nonfunctional-requirements-structured} dopĺňa ich nefunkčné požiadavky.
 
 \subsection{Funkčné požiadavky}
 
@@ -58,6 +58,37 @@ FR-10 & Automatické odoslanie notifikácie pri prekročení termínu revízie a
 FR-11 & Generovanie reportu revízií za zvolené obdobie. & Reporty & 4 & UR \\
 \hline
 FR-12 & Export reportov minimálne do formátov PDF a CSV. & Reporty & 3 & SR \\
+\hline
+\end{longtable}
+
+\subsection{Nefunkčné požiadavky}
+
+\small
+\begin{longtable}{|p{1.5cm}|p{5.8cm}|p{2.0cm}|c|p{2.1cm}|}
+\caption{Štruktúrovaná tabuľková reprezentácia nefunkčných požiadaviek}\label{tab:nonfunctional-requirements-structured}\\
+\hline
+ID & Popis požiadavky & Klasifikácia & Priorita & Zdroj \\
+\hline
+\endfirsthead
+\hline
+ID & Popis požiadavky & Klasifikácia & Priorita & Zdroj \\
+\hline
+\endhead
+NFR-01 & Systém musí vyžadovať autentifikáciu používateľa a autorizáciu prístupu podľa pridelenej roly. & Bezpečnosť & 5 & SR \\
+\hline
+NFR-02 & Systém musí zabezpečiť šifrovaný prenos dát medzi klientom a serverom pomocou protokolu HTTPS. & Bezpečnosť & 5 & SR \\
+\hline
+NFR-03 & Systém musí zaznamenávať dôležité operácie používateľov do auditného záznamu. & Bezpečnosť & 4 & SR \\
+\hline
+NFR-04 & Systém musí poskytovať responzívne webové rozhranie použiteľné na desktopových aj mobilných zariadeniach. & Použiteľnosť & 4 & UR \\
+\hline
+NFR-05 & Systém musí poskytovať stabilnú prevádzku pri bežnej súbežnej práci viacerých používateľov bez straty dát. & Dostupnosť & 4 & SR \\
+\hline
+NFR-06 & Systém musí podporovať pravidelné zálohovanie dát a obnovu po zlyhaní. & Spoľahlivosť & 4 & SR \\
+\hline
+NFR-07 & Systém musí umožniť export dát v štandardných formátoch pre použitie v ďalších nástrojoch organizácie. & Integrácia & 3 & SR \\
+\hline
+NFR-08 & Systém musí byť navrhnutý modulárne, aby bolo možné jednoducho rozširovať funkcionalitu o nové moduly. & Rozšíriteľnosť & 3 & UR \\
 \hline
 \end{longtable}
 
