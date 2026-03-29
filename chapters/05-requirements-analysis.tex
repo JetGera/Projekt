@@ -1,0 +1,52 @@
+% !TEX root = ../thesis.tex
+
+\chapter{Analýza požiadaviek}\label{ch:requirements-analysis}
+
+Analýza požiadaviek sa zameriava na identifikáciu kľúčových oblastí navrhovaného informačného systému pre správu distribúcie vody, evidenciu revízií a servisných zásahov. Cieľom analýzy je previesť počiatočné textové požiadavky do formálnejšej podoby, ktorá bude použiteľná pri návrhu architektúry, databázového modelu a používateľských scenárov.
+
+Výsledkom tejto fázy je systematické rozdelenie požiadaviek do štruktúrovaných kategórií, určenie ich priority a prepojenie na zdroje. Takto spracované požiadavky vytvárajú jednotný podklad pre implementáciu, testovanie a následné vyhodnotenie riešenia.
+
+\section{Štruktúrovaná tabuľková reprezentácia požiadaviek}
+
+Pri návrhu systému je dôležité, aby boli požiadavky definované jednoznačne, porovnateľne a overiteľne. Tabuľková reprezentácia umožňuje každú požiadavku presne identifikovať a priradiť jej vlastnosti, ktoré podporujú rozhodovanie o rozsahu implementácie.
+
+V tejto kapitole je každá požiadavka opísaná prostredníctvom nasledujúcich atribútov:
+
+\begin{itemize}
+\item \textbf{ID}: jednoznačný identifikátor požiadavky.
+\item \textbf{Popis požiadavky}: stručná formulácia očakávanej funkcionality.
+\item \textbf{Klasifikácia}: zaradenie požiadavky do vecnej oblasti systému.
+\item \textbf{Priorita}: dôležitosť požiadavky pre základnú prevádzku a implementačné poradie.
+\item \textbf{Referencia na zdroj}: odkaz na odborný alebo legislatívny podklad.
+\end{itemize}
+
+Tabuľka \ref{tab:functional-requirements-structured} prezentuje funkčné požiadavky identifikované v predchádzajúcej kapitole a pripravuje podklad pre nadväzujúcu analýzu nefunkčných požiadaviek.
+
+\subsection{Funkčné požiadavky}
+
+\small
+\begin{longtable}{p{1.3cm} p{5.8cm} p{2.0cm} c p{2.1cm}}
+\caption{Štruktúrovaná tabuľková reprezentácia funkčných požiadaviek}\label{tab:functional-requirements-structured}\\
+\toprule
+ID & Popis požiadavky & Klasifikácia & Priorita & Zdroj \\
+\midrule
+FR-01 & Založenie karty zariadenia s identifikátorom, typom, umiestnením, stavom a dátumom uvedenia do prevádzky. & \shortstack[l]{Evidencia\\zariadení} & 5 & UR \\
+FR-02 & Úprava údajov zariadenia s evidenciou histórie zmien. & \shortstack[l]{Evidencia\\zariadení} & 5 & UR \\
+FR-03 & Vyhľadávanie a filtrovanie zariadení podľa typu, lokality, stavu a zodpovednej osoby. & \shortstack[l]{Evidencia\\zariadení} & 4 & UR \\
+FR-04 & Plánovanie revízie zariadenia s termínom, rozsahom a pridelenou zodpovednou osobou. & Revízie & 5 & CR \\
+FR-05 & Záznam výsledku revízie vrátane stavu, poznámky a príloh. & Revízie & 5 & CR \\
+FR-06 & Zobrazenie histórie revízií zariadenia v časovom poradí. & Revízie & 4 & CR \\
+FR-07 & Založenie servisného zásahu na základe poruchy, revízie alebo manuálne. & Servis & 5 & UR \\
+FR-08 & Evidencia priebehu servisného zásahu vrátane vykonaných prác, použitého materiálu a zodpovednej osoby. & Servis & 4 & UR \\
+FR-09 & Automatické odoslanie notifikácie pred plánovaným termínom revízie. & Notifikácie & 4 & CR \\
+FR-10 & Automatické odoslanie notifikácie pri prekročení termínu revízie alebo servisného zásahu. & Notifikácie & 4 & CR \\
+FR-11 & Generovanie reportu revízií za zvolené obdobie. & Reporty & 4 & UR \\
+FR-12 & Export reportov minimálne do formátov PDF a CSV. & Reporty & 3 & SR \\
+\bottomrule
+\end{longtable}
+
+\noindent
+Priorita je hodnotená na škále 1 až 5, kde 5 predstavuje kritickú požiadavku pre základnú prevádzku systému a 1 predstavuje požiadavku s najnižšou implementačnou prioritou.
+
+\noindent
+Označenia zdrojov: \textbf{UR} (User Requirements) -- požiadavky odvodené z používateľských potrieb a prevádzkových procesov; \textbf{CR} (Compliance Requirements) -- požiadavky vyplývajúce z legislatívnych a regulačných rámcov, najmä \cite{EUDWD2020,SKVyhlaska912023}; \textbf{SR} (Scholarly/Standards Reference) -- požiadavky podložené odbornými zdrojmi a technickou praxou, napr. \cite{CarricoFerreira2021}.
