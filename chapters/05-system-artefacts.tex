@@ -1,0 +1,84 @@
+% !TEX root = ../thesis.tex
+
+\chapter{Hlavné projektové artefakty systému}\label{ch:system-artefacts}
+
+Táto kapitola sa zameriava na identifikáciu hlavných artefaktov systému, ktoré boli rozpoznané na základe analýzy požiadaviek. Artefakty predstavujú základné objekty systému, s ktorými systém pracuje, ako aj ich základné stavy. Ich definovanie je dôležité pre pochopenie štruktúry systému a jeho správania.
+
+Na základe predchádzajúcich kapitol boli identifikované nasledovné hlavné artefakty systému: zariadenie, filtračné zariadenie, revízia, servisný zásah, notifikácia, report a používateľ.
+
+\section{Zariadenie}
+
+Zariadenie predstavuje základný prvok distribučného systému vody. Ide o všeobecný objekt, ktorý zahŕňa rôzne technické komponenty, ako sú čerpacie stanice, potrubia alebo filtračné jednotky.
+
+Zariadenie obsahuje základné informácie, ako sú identifikátor, umiestnenie, technické parametre a aktuálny stav.
+
+Základné stavy zariadenia:
+\begin{itemize}
+    \item aktívne,
+    \item mimo prevádzky,
+    \item v údržbe.
+\end{itemize}
+
+\section{Filtračné zariadenie}
+
+Filtračné zariadenie je špecifický typ zariadenia určený na úpravu kvality vody. Je kľúčovým prvkom z hľadiska bezpečnosti a kvality pitnej vody.
+
+Každé filtračné zariadenie má evidované informácie o type filtra, dátume inštalácie a histórii revízií.
+
+Základné stavy filtračného zariadenia:
+\begin{itemize}
+    \item v prevádzke,
+    \item vyžaduje revíziu,
+    \item mimo prevádzky.
+\end{itemize}
+
+\section{Revízia}
+
+Revízia predstavuje kontrolu filtračného zariadenia vykonanú v určitom čase. Obsahuje informácie o dátume vykonania, zodpovednej osobe, výsledku kontroly a prípadných zisteniach.
+
+Revízia môže obsahovať aj prílohy vo forme protokolov alebo dokumentov.
+
+Základné stavy revízie:
+\begin{itemize}
+    \item naplánovaná,
+    \item vykonaná,
+    \item po termíne.
+\end{itemize}
+
+\section{Servisný zásah}
+
+Servisný zásah predstavuje činnosť vykonanú na zariadení alebo filtri s cieľom odstrániť poruchu alebo vykonať údržbu.
+
+Zahŕňa informácie o type zásahu, dátume, vykonávateľovi a výsledku zásahu.
+
+Základné stavy servisného zásahu:
+\begin{itemize}
+    \item naplánovaný,
+    \item prebieha,
+    \item dokončený.
+\end{itemize}
+
+\section{Notifikácia}
+
+Notifikácia slúži na informovanie používateľov o dôležitých udalostiach v systéme, napríklad o blížiacej sa revízii alebo o poruche zariadenia.
+
+Notifikácie môžu byť generované automaticky systémom.
+
+Základné stavy notifikácie:
+\begin{itemize}
+    \item odoslaná,
+    \item doručená,
+    \item prečítaná.
+\end{itemize}
+
+\section{Report}
+
+Report predstavuje výstup systému vo forme prehľadu údajov. Môže obsahovať informácie o revíziách, poruchách, zásahoch alebo stave zariadení.
+
+Reporty sú využívané najmä na manažérsku kontrolu a audit.
+
+\section{Používateľ}
+
+Používateľ predstavuje osobu, ktorá pracuje so systémom. Môže ísť o rôzne role, ako napríklad administrátor, technik alebo manažér.
+
+Každý používateľ má definované prístupové práva a oprávnenia v systéme.
