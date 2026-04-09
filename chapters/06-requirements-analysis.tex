@@ -97,3 +97,154 @@ Priorita je hodnotená na škále 1 až 5, kde 5 predstavuje kritickú požiadav
 
 \noindent
 Označenia zdrojov: \textbf{UR} (User Requirements) a \textbf{SR} (System Requirements) vyjadrujú charakter požiadavky. \textbf{UR} predstavuje požiadavky odvodené z používateľských potrieb a prevádzkových procesov, kým \textbf{SR} predstavuje systémové požiadavky odvodené z legislatívnych a odborných podkladov, najmä \cite{EUDWD2020,SKVyhlaska912023,CarricoFerreira2021}.
+
+\section{Aktéri a okolie systému}
+\label{sec:akteri-okolie-systemu}
+
+Navrhovaný informačný systém (ďalej len ``IS'') podporuje správu distribúcie pitnej a úžitkovej vody so zameraním na evidenciu filtračných zariadení a riadenie ich revízií (plánovanie, vykonanie, protokoly, nápravné opatrenia). Z hľadiska analýzy požiadaviek je kľúčové určiť (1) aktérov, ktorí so systémom priamo pracujú alebo z neho čerpajú výstupy, a (2) okolie systému (externé systémy a služby), s ktorými IS typicky komunikuje.
+
+Keďže medzi nefunkčné požiadavky patrí autentifikácia a autorizácia podľa pridelenej roly (NFR-01), prístupové práva sú definované pomocou modelu RBAC (Role-Based Access Control), t. j. oprávnenia sú priradené rolám a používatelia získavajú oprávnenia aktiváciou svojej roly \cite{NISTRBACGlossary,NISTRBACProject}.
+
+\subsection{Interní aktéri systému}
+
+Interní aktéri (roly) predstavujú používateľov, ktorí vykonávajú operatívne činnosti v systéme a priamo vytvárajú alebo spravujú artefakty identifikované v Kapitole~5 (zariadenie, filtračné zariadenie, revízia, servisný zásah, notifikácia, report, používateľ).
+Prehľad rolí a ich zodpovedností je uvedený v~\autoref{tab:internal-actors}.
+
+\begin{table}[!htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{p{34mm} p{110mm}}
+\toprule
+\textbf{Rola} & \textbf{Hlavné zodpovednosti a typické činnosti v IS} \\
+\midrule
+Administrátor systému (ADM) & Správa používateľských účtov a rolí, konfigurácia oprávnení (RBAC), nastavenie integračných parametrov, dohľad nad auditnými záznamami, prevádzková konfigurácia (notifikácie, exporty, pravidlá). \\
+\midrule
+Správca siete / prevádzky (NET) & Evidencia a aktualizácia registra zariadení (vrátane väzieb), plánovanie revízií a priraďovanie zodpovedných osôb, koordinácia servisných zásahov, kontrola plnenia termínov, správa prevádzkových prehľadov. \\
+\midrule
+Technik údržby (TECH) & Realizácia servisných zásahov (plánovaných aj ad-hoc), dopĺňanie záznamov o opravách, použitom materiáli a trvaní práce, aktualizácia stavu zariadenia po zásahu, reakcia na notifikácie o poruche alebo incidente. \\
+\midrule
+Revízny pracovník (REV) & Vykonávanie revízií filtračných zariadení podľa harmonogramu a legislatívnych požiadaviek, vyplnenie revízneho záznamu, priloženie protokolov/fotodokumentácie, zaznamenanie nedostatkov a návrh nápravných opatrení. \\
+\midrule
+Manažér / vedúci prevádzky (MAN) & Manažérsky dohľad nad plnením revíznych termínov a stavom zariadení, generovanie súhrnných reportov pre riadenie a audit, vyhodnocovanie trendov (poruchovosť, náklady, oneskorenia), kontrola súladu procesov. \\
+\bottomrule
+\end{tabular}
+\caption{Interní aktéri systému a ich hlavné zodpovednosti.}
+\label{tab:internal-actors}
+\end{table}
+
+\subsection{Externí aktéri a zainteresované strany}
+
+Externí aktéri sú subjekty mimo organizačnej štruktúry prevádzkovateľa, ktoré (a) dodávajú vstupy, (b) vyžadujú výstupy, alebo (c) podmieňujú spôsob evidencie a auditovateľnosť. V praxi ide najmä o:
+
+\begin{itemize}
+\item \textbf{Orgány verejného zdravotníctva a auditné autority (AUD)} -- vyžadujú preukázateľnú evidenciu kontrol, revízií a súvisiacich podkladov v súlade s rizikovo orientovaným prístupom a monitoringom kvality pitnej vody \cite{EUDWD2020,SKVyhlaska912023,UVZPitnaVodaMapy}. Typicky nepracujú priamo v IS, ale prijímajú exportované reporty a protokoly; pri vyššej miere digitalizácie môže byť uvažovaný obmedzený ``read-only'' prístup.
+\item \textbf{Akreditované laboratórium kvality vody (LAB)} -- poskytuje výsledky analýz a protokoly (napr. PDF/CSV), ktoré môžu byť v IS uložené ako prílohy k revíziám alebo udalostiam súvisiacim s kvalitou vody; režim a rozsah evidencie sa odvodzuje od požiadaviek na monitoring \cite{SKVyhlaska912023,EUDWD2020}.
+\item \textbf{Externý servisný dodávateľ / dodávateľ technológie (EXT)} -- realizuje špecializované zásahy alebo dodáva komponenty. Z pohľadu bezpečnosti a princípu minimálnych oprávnení je vhodné vytvoriť samostatnú rolu s obmedzeným prístupom len k prideleným zásahom/revíziám a k nevyhnutným údajom o zariadení \cite{NIST80082R3}.
+\item \textbf{Dodávatelia/prevádzkovatelia externých technológií (SCADA, CMMS, GIS, IdP)} -- nevystupujú ako ľudskí používatelia, ale ako integrovateľné systémy, ktoré poskytujú dáta alebo preberajú výstupy (pozri \autoref{sec:okolie-systemu}).
+\end{itemize}
+
+\subsection{Okolie systému a integračné rozhrania}
+\label{sec:okolie-systemu}
+
+Okolie systému tvorí kombinácia OT/prevádzkových technológií (napr. SCADA), podporných IS (napr. CMMS/EAM, GIS) a komunikačných služieb. V slovenskom regulačnom kontexte je dôraz kladený na auditovateľnosť, riadenie rizík a monitoring kvality pitnej vody \cite{EUDWD2020,SKVyhlaska912023}. Z praktického hľadiska to vedie k potrebe prepájať evidenciu zariadení, revízií a zásahov s (a) prevádzkovými dátami a (b) podkladmi pre kontrolu.
+Hlavné integračné toky a očakávané dátové výmeny sumarizuje \autoref{tab:external-systems}.
+
+\begin{table}[!htbp]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\textwidth}{p{20mm} X X p{29mm}}
+\toprule
+\textbf{Systém / služba} & \textbf{Účel v okolí IS} & \textbf{Typické dáta / udalosti} & \textbf{Typ rozhrania} \\
+\midrule
+SCADA/OT & Monitorovanie a riadenie technologických procesov (Supervisory Control and Data Acquisition) & Telemetria (prietok, tlak, hladiny), alarmy, prevádzkové stavy, časové rady & Preferovane ``read-only'' integrácia; v praxi často cez štandardy OT (napr. OPC UA) \cite{SiemensWinCCOA,OPCUAOverview2025,NIST80082R3} \\
+\midrule
+CMMS/EAM & Správa údržby a životného cyklu majetku & Pracovné príkazy, zásahy, plán údržby, náklady, SLA, stav objednávok & Synchronizácia/sprostredkovanie medzi IS a CMMS (napr. IBM Maximo) \cite{IBMMaximo,ISO55000} \\
+\midrule
+GIS & Priestorová evidencia siete a zariadení & Poloha zariadení, vrstvy distribučnej siete, mapové podklady, atribúty prvkov & Interoperabilita cez OGC služby (WMS/WFS) a desktop GIS (napr. QGIS) \cite{OGCWMS2006,OGCWFS,QGISDocs} \\
+\midrule
+Hydraulické modely & Analýza správania siete (simulácie) & Export/import topológie, parametrov a scenárov & Výmena dát podľa potrieb organizácie (napr. EPANET, InfoWorks, WaterGEMS) \cite{EPANET,InfoWorksWSPro,OpenFlowsWaterGEMS} \\
+\midrule
+IdP (LDAP/AD/SSO) & Centrálna správa identít a prístupov & Účty, skupiny, MFA, životný cyklus používateľa & SSO / federácia (rozšírenie podľa potrieb); zosúladené s RBAC \cite{NISTRBACProject} \\
+\midrule
+E-mail/SMS brána & Distribúcia notifikácií & Pripomienky revízií, incidenty, eskalácie po termíne & SMTP/SMS gateway, logovanie doručenia \cite{NIST80082R3} \\
+\bottomrule
+\end{tabularx}
+\caption{Okolie systému -- hlavné externé systémy a typické integračné toky.}
+\label{tab:external-systems}
+\end{table}
+
+Z bezpečnostného hľadiska sa zvlášť odlišuje integrácia na OT/SCADA vrstve: často ide o segmentovanú sieť s požiadavkami na dostupnosť a deterministické správanie. Preto je vhodné navrhovať integráciu tak, aby minimalizovala zásahy do OT prostredia (napr. odčítanie dát, nie priame riadenie), a aby bol jasne definovaný dôveryhodný komunikačný kanál (napr. cez štandardné priemyselné rozhrania) \cite{NIST80082R3,ISAIEC62443}.
+
+\subsection{Matica oprávnení}
+\label{sec:matica-opravneni}
+
+Matica oprávnení konkretizuje RBAC model (NFR-01) pre hlavné artefakty systému (Kapitola~5). V tabuľke sú použité skratky rolí: ADM (Administrátor), NET (Správca siete), TECH (Technik), REV (Revízny pracovník), MAN (Manažér), EXT (Externý dodávateľ), AUD (Auditor/regulátor). Rozsahy oprávnení sú navrhnuté podľa princípu minimálnych oprávnení a s ohľadom na auditovateľnosť \cite{NISTRBACGlossary,NIST80082R3}.
+Konkrétne priradenie oprávnení podľa objektov systému je uvedené v~\autoref{tab:rbac}.
+
+\begin{table}[!htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{4pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{56mm} c c c c c c c}
+\toprule
+\textbf{Objekt / oblasť} & \textbf{ADM} & \textbf{NET} & \textbf{TECH} & \textbf{REV} & \textbf{MAN} & \textbf{EXT} & \textbf{AUD} \\
+\midrule
+Register zariadení (zariadenie, filtračné zariadenie) & M,/,CRUD & CRUD & R,/,U & R & R & R & R \\
+Plán revízií (harmonogram, priradenia) & M,/,CRUD & CRUD & R & R & R & R & R \\
+Záznam revízie + prílohy (protokol, fotodokumentácia) & M,/,R & R & R & CRUD & R & C,/,R,/,U (len pridelené) & R \\
+Servisný zásah (priebeh, materiál, výsledok) & M,/,R & R & CRUD & R & R & CRUD (len pridelené) & R \\
+Notifikácie (šablóny, pravidlá, príjemcovia) & M,/,CRUD & C,/,R,/,U & R & R & R & -- & -- \\
+Reporty a export (PDF/CSV, súhrny) & M,/,CRUD & R & R & R & C,/,R,/,U & R & R \\
+Používatelia a roly (RBAC) & M,/,CRUD & -- & -- & -- & -- & -- & -- \\
+Integrácie (GIS/SCADA/CMMS, kľúče, endpointy) & M,/,CRUD & C,/,R,/,U & -- & -- & R & -- & -- \\
+Auditný log (kritické operácie, export pre kontrolu) & M,/,R & R & R (len vlastné) & R (len vlastné) & R & R (len vlastné) & R \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Matica oprávnení (RBAC). Legenda: C -- vytvorenie, R -- čítanie, U -- úprava, D -- zmazanie, M -- správa/konfigurácia, ``--'' -- bez prístupu. Obmedzenia typu ``len pridelené'' znamenajú prístup len k záznamom priradeným danému používateľovi alebo jeho tímu.}
+\label{tab:rbac}
+\end{table}
+
+\subsection{Kontextový diagram okolia systému}
+
+Vzťahy medzi navrhovaným IS a externými aktérmi/systémami sú graficky znázornené v~\autoref{fig:context}. Diagram dopĺňa tabuľkové zhrnutie integračných rozhraní a ukazuje hlavné smery toku dát (vstupy do IS a výstupy z IS).
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[
+	node distance=18mm and 18mm,
+	box/.style={draw, rounded corners, align=center, inner sep=6pt, font=\small},
+	link/.style={-{Latex[length=2mm]}, line width=0.6pt}
+]
+\node[box, minimum width=46mm, minimum height=14mm] (is) {Navrhovaný\\informačný systém\\(IS)};
+
+\node[box, above left=of is] (scada) {SCADA/OT\\(napr. WinCC OA)\\\cite{SiemensWinCCOA}};
+\node[box, above=of is] (gis) {GIS\\(napr. QGIS)\\\cite{QGISDocs}};
+\node[box, above right=of is] (cmms) {CMMS/EAM\\(napr. IBM Maximo)\\\cite{IBMMaximo}};
+
+\node[box, left=of is] (idp) {IdP\\(LDAP/AD/SSO)};
+\node[box, right=of is] (notify) {E-mail/SMS\\brána};
+
+\node[box, below left=of is] (lab) {Laboratórium\\kvality vody};
+\node[box, below=of is] (aud) {Audítor /\\verejné zdravotníctvo\\\cite{SKVyhlaska912023,UVZPitnaVodaMapy}};
+\node[box, below right=of is] (model) {Hydraulické\\modely\\\cite{EPANET}};
+
+\draw[link] (scada) -- node[sloped, above, font=\scriptsize] {telemetria, alarmy} (is);
+\draw[link] (gis) -- node[right, font=\scriptsize] {poloha, vrstvy (WMS/WFS)} (is);
+\draw[link] (cmms) -- node[sloped, above, font=\scriptsize] {príkazy, zásahy, aktíva} (is);
+
+\draw[link] (idp) -- node[above, font=\scriptsize] {účty, skupiny} (is);
+\draw[link] (is) -- node[above, font=\scriptsize] {notifikácie} (notify);
+
+\draw[link] (lab) -- node[sloped, above, font=\scriptsize] {protokoly, výsledky} (is);
+\draw[link] (is) -- node[font=\scriptsize] {reporty, exporty} (aud);
+\draw[link] (model) -- node[sloped, above, font=\scriptsize] {export/import dát} (is);
+\end{tikzpicture}
+\caption{Kontextový diagram -- okolie navrhovaného systému a hlavné komunikačné/integračné väzby.}
+\label{fig:context}
+\end{figure}
