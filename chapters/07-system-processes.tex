@@ -1,0 +1,421 @@
+% !TEX root = ../thesis.tex
+
+\chapter{Procesy systému a vzťahy medzi prvkami systému}
+\label{ch:system-processes}
+
+Táto kapitola rozpracúva \emph{hlavné procesy} navrhovaného informačného systému (IS) a vzťahy medzi jeho prvkami.
+Nadväzuje na identifikované artefakty systému (Kapitola~\ref{ch:system-artefacts}) a na analýzu požiadaviek vrátane aktérov, oprávnení (RBAC) a okolia systému (Kapitola~\ref{ch:requirements-analysis}).
+Cieľom je ukázať:
+(1) \emph{štrukturálne vzťahy} medzi objektmi, a zároveň
+(2) \emph{procedurálne vzťahy} medzi objektmi a činnosťami v typických prevádzkových scenároch.
+
+Z hľadiska regulačného rámca je dôležitá auditovateľnosť a preukázateľná evidencia kontrol a nápravných opatrení \cite{EUDWD2020,SKVyhlaska912023}.
+Z hľadiska bezpečnosti a organizácie prístupu je podstatné, aby procesy rešpektovali model rolí a oprávnení (RBAC) \cite{NISTRBACGlossary,NISTRBACProject}.
+
+\section{Prehľad hlavných procesov}
+\label{sec:process-overview}
+
+V tejto práci za \emph{hlavné procesy} považujeme procesy, ktoré priamo vytvárajú alebo menia kľúčové artefakty IS (revízia, servisný zásah, notifikácia, report) a zabezpečujú prepojenie medzi evidenciou zariadení a operatívnou činnosťou.
+Tabuľka~\ref{tab:process-overview} sumarizuje procesy rozpracované ďalej.
+
+\begin{table}[!htbp]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{12mm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{31mm} >{\raggedright\arraybackslash}p{22mm} >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{ID} & \textbf{Proces} & \textbf{Spúšťač} & \textbf{Roly} & \textbf{Hlavné výstupy a zmenené objekty} \\
+\midrule
+P-A & Plánovanie a vykonanie revízie filtračného zariadenia & Harmonogram, povinnosť revízie, blížiaci sa termín & NET, REV, MAN & Revízia (stav), prílohy/protokol, prípadný podnet na servisný zásah, notifikácie \\
+\midrule
+P-B & Nevyhovujúca revízia alebo prevádzkový podnet $\rightarrow$ servisný zásah $\rightarrow$ uzavretie & Nevyhovel, podnet od obsluhy, SCADA alarm (read-only) & NET, TECH, EXT, MAN & Servisný zásah (stav), aktualizácia stavu zariadenia, notifikácie, voliteľná synchronizácia do CMMS/EAM \\
+\midrule
+P-C & Správa registra zariadení a väzieb & Zmena infraštruktúry, evidencia nového prvku, aktualizácia parametrov & NET, ADM & Zariadenie/filtračné zariadenie (CRUD), väzby medzi zariadeniami, história zmien \\
+\midrule
+P-D & Notifikácie a eskalácie & Časové udalosti (termíny), zmena stavu revízie/zasahu, alarm & IS (automat), NET, MAN & Notifikácia (odoslaná/doručená), audit záznam o odoslaní a výsledku \\
+\midrule
+P-E & Reporty a export pre audit/regulátora & Požiadavka na prehľad, audit, kontrola súladu & MAN, AUD, ADM & Report (PDF/CSV), archivácia reportu, auditný export \\
+\bottomrule
+\end{tabularx}
+\caption{Prehľad hlavných procesov IS a ich väzby na roly a objekty.}
+\label{tab:process-overview}
+\end{table}
+
+\section{Štrukturálne vzťahy medzi prvkami systému}
+\label{sec:structural-relations}
+
+Štrukturálny pohľad popisuje, \emph{aké objekty} v systéme existujú a \emph{ako sú navzájom prepojené}. Vychádzame z artefaktov definovaných v Kapitole~\ref{ch:system-artefacts}.
+Keďže \emph{filtračné zariadenie} je špecifickým typom zariadenia, v modeli je vyjadrené ako podtyp objektu \emph{zariadenie}.
+
+\subsection{Model vzťahov medzi artefaktmi}
+
+Vzťahy medzi artefaktmi sumarizuje \autoref{fig:artefact-relations}. Diagram je účelovo zjednodušený tak, aby bol použiteľný aj pri čítaní procesných diagramov.
+
+\begin{figure}[!htbp]
+\centering
+\begin{tikzpicture}[
+	box/.style={draw, rounded corners, align=center, text width=36mm, minimum height=22mm, inner sep=5pt, font=\footnotesize},
+	link/.style={-{Latex[length=2mm]}, line width=0.6pt},
+	inherit/.style={-{Latex[length=2mm]}, line width=0.6pt}
+]
+
+% Core entities: align boxes into rows so the remaining links can be straight.
+\node[box] (device) at (0,0) {\textbf{Zariadenie}\\- id\\- typ\\- lokalita\\- stav};
+\node[box] (service) at (6.0,0) {\textbf{Servisný zásah}\\- typ\\- stav\\- výsledok};
+\node[box] (notif) at (12.0,0) {\textbf{Notifikácia}\\- kanál\\- stav\\- čas odoslania};
+
+\node[box] (filter) at (0,-3.15) {\textbf{Filtračné zariadenie}\\(podtyp zariadenia)\\- typ filtra\\- dátum inštalácie};
+\node[box] (inspection) at (6.0,-3.15) {\textbf{Revízia}\\- termín\\- výsledok\\- stav};
+\node[box] (user) at (12.0,-3.15) {\textbf{Používateľ}\\- rola (RBAC)};
+
+\node[box] (report) at (6.0,-6.3) {\textbf{Report}\\- typ\\- obdobie\\- formát};
+
+% Relations
+\draw[inherit] (filter) -- node[left, font=\scriptsize] {\emph{je podtyp}} (device);
+
+\draw[link] (inspection.west) -- node[above, font=\scriptsize, fill=white, inner sep=1pt] {N:1} (filter.east);
+\draw[link] (service.west) -- node[above, font=\scriptsize, fill=white, inner sep=1pt] {N:1} (device.east);
+
+\draw[link] (service.south) -- node[right, font=\scriptsize, fill=white, inner sep=1pt] {0..1 (vyvolaná)} (inspection.north);
+
+\draw[link] (notif.west) -- node[above, font=\scriptsize, fill=white, inner sep=1pt] {viazaná na} (service.east);
+
+\draw[link] (notif.south) -- node[right, font=\scriptsize, fill=white, inner sep=1pt] {0..* príjemcovia} (user.north);
+
+\draw[link] (report.north) -- node[right, font=\scriptsize, fill=white, inner sep=1pt] {agreguje} (inspection.south);
+
+\end{tikzpicture}
+\caption{Model vzťahov medzi hlavnými artefaktmi IS (zjednodušený statický pohľad).}
+\label{fig:artefact-relations}
+\end{figure}
+
+\subsection{Kardinality a obmedzenia vzťahov}
+
+Tabuľka~\ref{tab:relationship-cardinalities} dopĺňa diagram o základné kardinality a typické obmedzenia z pohľadu procesov (napr. aby historické záznamy ostali dohľadateľné aj po zmenách v registri zariadení).
+
+\begin{table}[!htbp]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{44mm} >{\centering\arraybackslash}p{18mm} >{\raggedright\arraybackslash}p{55mm} >{\centering\arraybackslash}p{18mm}}
+\toprule
+\multicolumn{1}{c}{\textbf{Vzťah}} & \multicolumn{1}{c}{\textbf{Kardinalita}} & \multicolumn{1}{c}{\textbf{Význam / obmedzenie}} & \multicolumn{1}{c}{\textbf{Typický vlastník}} \\
+\midrule
+Filtračné zariadenie -- Revízia & 1 : N & Každá revízia sa viaže presne na jedno filtračné zariadenie; história revízií je kľúčová pre audit. & REV / NET \\
+\midrule
+Zariadenie -- Servisný zásah & 1 : N & Servisný zásah sa vždy viaže na jedno zariadenie (vrátane filtra); záznam musí ostať dostupný aj po vyradení zariadenia (archivácia). & TECH / NET \\
+\midrule
+Servisný zásah -- Revízia & 0..1 : 0..1 & Zásah môže vzniknúť z revízie (nevyhovel) alebo z iného podnetu; väzba umožní spätnú dohľadateľnosť príčiny. & NET \\
+\midrule
+Notifikácia -- Používateľ & N : M & Príjemcovia sa určujú podľa roly a zodpovednosti; doručenie a výsledok odoslania sa loguje (audit). & IS / ADM \\
+\midrule
+Report -- (Revízia/Servis) & 1 : N & Report agreguje dáta podľa filtra (obdobie, typ); export musí rešpektovať RBAC. & MAN / ADM \\
+\bottomrule
+\end{tabularx}
+\caption{Základné kardinality a procesné obmedzenia vzťahov medzi objektmi.}
+\label{tab:relationship-cardinalities}
+\end{table}
+
+\section{Procedurálne vzťahy: procesy a zmena stavov}
+\label{sec:procedural-relations}
+
+Procedurálny pohľad popisuje \emph{ako} sa objekty menia v čase a \emph{ktoré činnosti} na nich vykonávajú jednotlivé roly.
+V procesoch sa opierame o funkčné požiadavky (FR) z tabuľky~\ref{tab:functional-requirements-structured} a o roly z tabuľky~\ref{tab:internal-actors} spolu s oprávneniami v tabuľke~\ref{tab:rbac}.
+
+\subsection{P-A: Plánovanie a vykonanie revízie filtračného zariadenia}
+\label{sec:process-pa}
+
+Proces pokrýva plánovanie revízie (FR-04), vykonanie a zápis výsledku (FR-05), a udržiavanie histórie (FR-06).
+Súčasťou procesu sú notifikácie pred termínom, v deň termínu a po termíne (FR-09, FR-10). Konkrétna hodnota predstihu (\emph{N dní}) je v praxi organizácie konfigurovateľná a vyplýva z interných pravidiel prevádzkovateľa; legislatívny dôraz je na auditovateľnosť a preukázateľnú evidenciu \cite{EUDWD2020,SKVyhlaska912023}.
+
+\textbf{Spúšťač:} potreba naplánovať revíziu (harmonogram, periodická povinnosť).\\
+\textbf{Výstupy:} revízia v stave \emph{naplánovaná}/\emph{vykonaná}/\emph{po termíne}, protokol/prílohy, prípadný podnet na servisný zásah.
+
+\begin{figure}[!htbp]
+\centering
+\footnotesize
+\begin{tikzpicture}[
+	lane/.style={draw, rounded corners, minimum width=34mm, minimum height=7mm, font=\scriptsize, align=center},
+	pstep/.style={draw, rounded corners, align=center, inner sep=4pt, font=\footnotesize, minimum width=33mm},
+	dec/.style={diamond, draw, aspect=1.8, inner sep=1pt, font=\footnotesize, align=center},
+	link/.style={-{Latex[length=2mm]}, line width=0.6pt}
+]
+
+% Lanes (headers)
+\node[lane] (net) at (0,0) {NET};
+\node[lane] (is) at (5.0,0) {IS};
+\node[lane] (rev) at (10.0,0) {REV};
+
+% Steps
+\node[pstep] (plan) at (0,-1.8) {Naplánovať revíziu\\(termín, rozsah, zodp.)};
+\node[pstep] (save) at (5.0,-1.8) {Uložiť harmonogram\\a priradenie};
+\node[pstep] (notify) at (5.0,-3.5) {Notifikácie\\N dní pred / v deň / po termíne};
+\node[pstep] (do) at (10.0,-3.5) {Vykonať revíziu\\filtračného zariadenia};
+\node[pstep] (record) at (10.0,-5.2) {Zapísať výsledok\\+ protokol/prílohy};
+
+\node[dec] (ok) at (10.0,-7.0) {Vyhovel?};
+\node[pstep] (close) at (7.0,-8.8) {Uzavrieť revíziu\\(stav: vykonaná)};
+\node[pstep] (createService) at (13.0,-8.8) {Vytvoriť podnet\\na servisný zásah};
+
+% Links
+\draw[link] (plan) -- (save);
+\draw[link] (save) -- (notify);
+\draw[link] (notify) -- (do);
+\draw[link] (do) -- (record);
+\draw[link] (record) -- (ok);
+\draw[link] (ok) -- node[sloped, above, font=\scriptsize] {áno} (close);
+\draw[link] (ok) -- node[sloped, above, font=\scriptsize] {nie} (createService);
+
+\end{tikzpicture}
+\caption{Proces P-A: plánovanie a vykonanie revízie filtračného zariadenia (zjednodušený workflow).}
+\label{fig:process-pa}
+\end{figure}
+
+\subsection{P-B: Nevyhovujúca revízia alebo podnet \texorpdfstring{$\rightarrow$}{->} servisný zásah \texorpdfstring{$\rightarrow$}{->} uzavretie}
+\label{sec:process-pb}
+
+Servisný zásah môže vzniknúť ako reakcia na nevyhovujúcu revíziu (väzba na revíziu) alebo na prevádzkový podnet (napr. hlásenie obsluhy alebo read-only alarm zo SCADA).
+V procese sa vytvára a vedie servisný zásah (FR-07, FR-08) a podľa potreby sa aktualizuje stav zariadenia.
+Integrácia so systémami CMMS/EAM je uvažovaná ako voliteľná synchronizácia pracovných príkazov a výsledkov \cite{IBMMaximo,ISO55000}.
+
+\textbf{Spúšťač:} nevyhovujúci výsledok revízie alebo podnet (udalosť).\\
+\textbf{Výstupy:} servisný zásah (stav), dokumentácia prác/materiálu, aktualizovaný stav zariadenia, notifikácie.
+
+\begin{figure}[!htbp]
+\centering
+\footnotesize
+\begin{tikzpicture}[
+	lane/.style={draw, rounded corners, minimum width=36mm, minimum height=7mm, font=\scriptsize, align=center},
+	pstep/.style={draw, rounded corners, align=center, inner sep=4pt, font=\footnotesize, minimum width=37mm},
+	link/.style={-{Latex[length=2mm]}, line width=0.6pt}
+]
+
+\node[lane] (net) at (0,0) {NET/REV};
+\node[lane] (is) at (5.0,0) {IS};
+\node[lane] (tech) at (10.0,0) {TECH/EXT};
+
+\node[pstep] (init) at (0,-1.9) {Založiť zásah\\(z revízie/podnetu)};
+\node[pstep] (assign) at (5.0,-1.9) {Priradiť\\TECH/EXT};
+\node[pstep] (start) at (10.0,-3.7) {Začať práce\\na zariadení};
+
+\node[pstep] (notify) at (5.0,-3.7) {Odoslať\\notifikáciu o priradení};
+\node[pstep] (log) at (10.0,-5.5) {Evidovať práce\\a materiál};
+\node[pstep] (finish) at (10.0,-7.3) {Ukončiť zásah\\(stav: dokončený)};
+
+\node[pstep] (update) at (5.0,-7.3) {Aktualizovať stav\\zariadenia};
+\node[pstep] (sync) at (5.0,-9.1) {Voliteľne\\synchronizovať do CMMS};
+
+\draw[link] (init) -- (assign);
+\draw[link] (assign) -- (notify);
+\draw[link] (notify) -- (start);
+\draw[link] (start) -- (log);
+\draw[link] (log) -- (finish);
+\draw[link] (finish) -- (update);
+\draw[link] (update) -- (sync);
+
+\end{tikzpicture}
+\caption{Proces P-B: servisný zásah ako reakcia na revíziu alebo prevádzkový podnet (zjednodušený workflow).}
+\label{fig:process-pb}
+\end{figure}
+
+\subsection{P-C: Správa registra zariadení a väzieb}
+\label{sec:process-pc}
+
+Register zariadení tvorí spoločný základ pre všetky ostatné procesy.
+Proces pokrýva založenie, úpravy a vyhľadávanie zariadení (FR-01 až FR-03) a evidenciu väzieb medzi zariadeniami (napr. komponenty a ich nadradené prvky).
+Z pohľadu auditovateľnosti je dôležité, aby zmeny v registri nepoškodili historické záznamy revízií a zásahov (stabilný identifikátor zariadenia, preferencia archivácie pred zmazaním).
+
+\textbf{Typické kroky procesu:}
+\begin{enumerate}[label=\arabic*.]
+\item NET založí alebo aktualizuje kartu zariadenia a priradí lokalitu.
+\item NET doplní väzby na komponenty (hierarchia) a prípadne označí, že ide o filtračné zariadenie (podtyp).
+\item IS uloží zmenu, zapíše auditnú stopu a sprístupní údaje pre procesy revízií a servisu (prepojenie cez stabilné ID).
+\item Pri vyradení prvku NET zmení stav na \emph{mimo prevádzky} alebo vykoná archiváciu, aby historické revízie a zásahy ostali dohľadateľné.
+\end{enumerate}
+
+\textbf{Integrácie (dotyky):} poloha a mapové vrstvy môžu byť čítané alebo synchronizované s GIS systémom (napr. cez OGC WMS/WFS) \cite{OGCWMS2006,OGCWFS,QGISDocs}. V prípade, že existuje aj CMMS/EAM, technické parametre alebo pracovné príkazy môžu byť synchronizované podľa potrieb organizácie \cite{ISO55000}.
+
+\textbf{Okrajové prípady:} konflikty medzi manuálnou zmenou a importom z GIS/CMMS sa riešia schválením NET/ADM s auditnou stopou ("zdroj pravdy" pre vybrané atribúty).
+
+\subsection{P-D: Notifikácie a eskalácie}
+\label{sec:process-pd}
+
+Notifikácie sú generované automaticky na základe termínov a stavov revízií a zásahov.
+Aby procesy minimalizovali zásahy do OT prostredia, vstupy z SCADA sa uvažujú ako read-only udalosti (alarmy), ktoré môžu vytvoriť podnet pre NET, nie priame riadenie zariadení \cite{NIST80082R3,ISAIEC62443}.
+
+\textbf{Pravidlá a správanie v procese:}
+\begin{itemize}
+\item \emph{Pred termínom revízie (N dní)}: IS odošle notifikáciu priradenému REV a NET.
+\item \emph{V deň termínu revízie}: reminder, ak revízia nie je v stave \emph{vykonaná}.
+\item \emph{Po termíne revízie}: eskalácia na NET a MAN; revízia sa zároveň označí ako \emph{po termíne}.
+\item \emph{Pri založení servisného zásahu}: notifikácia TECH/EXT s priradením a odkazom na záznam.
+\item \emph{Pri zmene stavu zásahu}: informovanie NET/MAN podľa nastavení (minimálne interné oznámenie).
+\item \emph{SCADA alarm (read-only)}: IS vytvorí podnet pre NET, pričom sa explicitne vyhýba priamemu riadeniu OT.
+\end{itemize}
+
+\textbf{Audit a spoľahlivosť:} pri každom odoslaní sa zaznamená čas, príjemca, kanál a výsledok (OK/FAIL). Pri výpadku brány sa použije opakovaný pokus a interný kanál s eskaláciou.
+
+\begin{figure}[!htbp]
+\centering
+\footnotesize
+\begin{tikzpicture}[
+	box/.style={draw, rounded corners, align=center, inner sep=5pt, font=\footnotesize},
+	link/.style={-{Latex[length=2mm]}, line width=0.6pt}
+]
+\node[box] (sched) {Časovač /\\pravidlo};
+\node[box, right=18mm of sched] (is) {IS\\(notifikácie)};
+\node[box, right=18mm of is] (gw) {E-mail/SMS\\brána};
+\node[box, below=10mm of gw] (ui) {Interné\\oznámenie};
+\node[box, right=18mm of gw] (user) {Používateľ\\(adresát)};
+
+\draw[link] (sched) -- node[above, font=\scriptsize] {spúšťač} (is);
+\draw[link] (is) -- node[above, font=\scriptsize] {odoslanie} (gw);
+\draw[link] (is) -- node[sloped, above, font=\scriptsize] {zápis} (ui);
+\draw[link] (gw) -- node[above, font=\scriptsize] {doručenie} (user);
+\draw[link] (ui) -- node[sloped, above, font=\scriptsize] {zobrazenie} (user);
+\end{tikzpicture}
+\caption{Zjednodušený sekvenčný pohľad na odoslanie notifikácie (externý kanál + interné oznámenie).}
+\label{fig:process-notify-seq}
+\end{figure}
+
+\subsection{P-E: Reporty, export a podklady pre audit/regulátora}
+\label{sec:process-pe}
+
+Reporty slúžia na manažérsky dohľad, prehľady a audit.
+Proces pokrýva generovanie prehľadov revízií a zásahov za obdobie (FR-11), export do PDF/CSV (FR-12) a archiváciu.
+Keďže regulačné požiadavky kladú dôraz na preukázateľnosť kontrol a nápravných opatrení \cite{EUDWD2020,SKVyhlaska912023}, reporty musia byť dohľadateľné a musia rešpektovať oprávnenia podľa rolí (RBAC).
+
+\textbf{Typické kroky procesu:}
+\begin{enumerate}[label=\arabic*.]
+\item MAN zvolí typ reportu a obdobie ("od--do"). IS používa jednoznačné pravidlo intervalov a lokálny čas prevádzkovateľa.
+\item IS načíta dáta z revízií a zásahov v konzistentnom "snapshot" stave, aby sa výsledok počas generovania nemenil.
+\item IS vygeneruje report a umožní export do PDF/CSV; výsledný export sa archivuje s metadátami (čas, autor, parametre).
+\item AUD (ak je uvažovaný ako externý čitateľ) má len read-only prístup k exportom podľa oprávnení z Kapitoly~\ref{ch:requirements-analysis}.
+\end{enumerate}
+
+\textbf{Okrajové prípady:} pri veľkých exportoch sa môžu uplatniť obmedzenia (napr. povinné filtre alebo postupná/asynchrónna generácia), aby nebol ohrozený výkon systému.
+
+\section{Matice prepojení a dohľadateľnosť (traceability)}
+\label{sec:traceability}
+
+\subsection{Mapovanie procesov na funkčné požiadavky}
+
+Tabuľka~\ref{tab:process-to-fr} mapuje procesy P-A až P-E na funkčné požiadavky (FR) z tabuľky~\ref{tab:functional-requirements-structured}.
+
+\begin{table}[!htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{>{\raggedright\arraybackslash}p{22mm} *{12}{>{\centering\arraybackslash}p{8.5mm}}}
+\toprule
+\textbf{Proces} & \textbf{FR-01} & \textbf{FR-02} & \textbf{FR-03} & \textbf{FR-04} & \textbf{FR-05} & \textbf{FR-06} & \textbf{FR-07} & \textbf{FR-08} & \textbf{FR-09} & \textbf{FR-10} & \textbf{FR-11} & \textbf{FR-12} \\
+\midrule
+P-A Revízia & -- & -- & -- & x & x & x & -- & -- & x & x & -- & -- \\
+P-B Servis & -- & -- & -- & -- & -- & -- & x & x & -- & x & -- & -- \\
+P-C Register & x & x & x & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+P-D Notifikácie & -- & -- & -- & -- & -- & -- & -- & -- & x & x & -- & -- \\
+P-E Reporty & -- & -- & -- & -- & -- & x & -- & -- & -- & -- & x & x \\
+\bottomrule
+\end{tabular}%
+\caption{Mapovanie procesov na funkčné požiadavky (FR). Legenda: x -- proces priamo realizuje/aktivuje požiadavku.}
+\label{tab:process-to-fr}
+\end{table}
+
+\subsection{Objekt \texorpdfstring{$\rightarrow$}{->} činnosť \texorpdfstring{$\rightarrow$}{->} zmena stavu \texorpdfstring{$\rightarrow$}{->} rola \texorpdfstring{$\rightarrow$}{->} audit}
+
+Tabuľka~\ref{tab:object-activity-matrix} sumarizuje procedurálne väzby medzi objektmi a činnosťami a zároveň explicitne ukazuje, ktoré roly zodpovedajú za zmeny a ktoré udalosti sú auditovateľné (NFR-03).
+
+\begin{table}[!htbp]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{22mm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{32mm} >{\raggedright\arraybackslash}p{13mm} >{\raggedright\arraybackslash}p{30mm}}
+\toprule
+\textbf{Objekt} & \textbf{Typické činnosti} & \textbf{Zmena stavu} & \textbf{Rola} & \textbf{Audit (min.)} \\
+\midrule
+Zariadenie & založiť / aktualizovať kartu, priradiť lokalitu, upraviť väzby, archivovať & aktívne / mimo prevádzky / v údržbe & NET / ADM & kto zmenil čo a kedy; zmena stavu \\
+\midrule
+Filtračné zariadenie & špecifikácia filtra, prepojenie na revízie, zmena parametrov & v prevádzke / vyžaduje revíziu / mimo prevádzky & NET / REV & zmena parametrov + dôvod \\
+\midrule
+Revízia & naplánovať, vykonať, priložiť protokol, uzavrieť alebo preplánovať & naplánovaná / vykonaná / po termíne & NET / REV & plánovanie, zmena termínu, zápis výsledku \\
+\midrule
+Servisný zásah & založiť, priradiť, evidovať práce, uzavrieť, naviazať na revíziu/podnet & naplánovaný / prebieha / dokončený & TECH / EXT / NET & priradenie, zmeny stavu, uzavretie \\
+\midrule
+Notifikácia & automaticky generovať, odoslať, evidovať výsledok doručenia & odoslaná / doručená / prečítaná & IS / ADM & čas odoslania, výsledok (OK/FAIL), príjemca \\
+\midrule
+Report & generovať, exportovať (PDF/CSV), archivovať, poskytovať pre audit & (bez stavov) + verzia/archív & MAN / ADM / AUD & kto generoval, parametre obdobia, hash/ID exportu \\
+\bottomrule
+\end{tabularx}
+\caption{Matica procedurálnych väzieb medzi objektmi a činnosťami (vrátane auditovateľných udalostí).}
+\label{tab:object-activity-matrix}
+\end{table}
+
+\subsection{Pravidlá notifikácií (zhrnutie)}
+
+Tabuľka~\ref{tab:notification-rules} sumarizuje pravidlá notifikácií použité v procesoch. Konkrétne časové parametre (napr. N dní pred termínom) sú uvažované ako konfigurovateľné podľa interných pravidiel prevádzkovateľa.
+
+\begin{table}[!htbp]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.2}
+\scalebox{0.85}{%
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{42mm} >{\raggedright\arraybackslash}p{30mm} >{\raggedright\arraybackslash}p{24mm} >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{Spúšťač} & \textbf{Príjemca} & \textbf{Kanál} & \textbf{Poznámka / eskalácia} \\
+\midrule
+Blížiaci sa termín revízie (N dní pred) & REV, NET & e-mail + interné & N je konfigurovateľné \\
+\midrule
+V deň termínu revízie & REV, NET & e-mail + interné & reminder, ak revízia nie je vykonaná \\
+\midrule
+Po termíne revízie & NET, MAN & e-mail + interné & eskalácia pre oneskorenie \\
+\midrule
+Založenie servisného zásahu & TECH/EXT & e-mail + interné & obsahuje priradenie a odkaz na zásah \\
+\midrule
+Zmena stavu zásahu (prebieha/dokončený) & NET, MAN & interné (voliteľne e-mail) & súhrn stavu a výsledku \\
+\midrule
+SCADA alarm (read-only) & NET & interné & podnet na preverenie, bez priameho riadenia \cite{NIST80082R3} \\
+\bottomrule
+\end{tabularx}%
+}
+\caption{Zhrnutie pravidiel notifikácií a eskalácií.}
+\label{tab:notification-rules}
+\end{table}
+
+\section{Okrajové prípady a zlyhania (edge cases)}
+\label{sec:edge-cases}
+
+Okrajové prípady sú dôležité najmä z hľadiska auditovateľnosti a spoľahlivosti procesov.
+V tejto práci ich uvádzame ako pravidlá správania IS (bez detailov implementácie):
+
+\begin{itemize}
+\item \textbf{Preplánovanie a zrušenie revízie}: pôvodný termín a dôvod zmeny musia ostať v histórii (audit).
+\item \textbf{Duplicitné zásahy}: IS má rozpoznať existujúci otvorený zásah pre rovnaké zariadenie a umožniť prepojenie alebo zdôvodnenie duplicity.
+\item \textbf{Výpadok notifikačnej brány}: výsledok odoslania (OK/FAIL) sa eviduje; pri dlhšom výpadku sa využije interný kanál a eskalácia.
+\item \textbf{Konflikt zdrojov dát (manuál vs. GIS/CMMS)}: organizácia určí jednoduché pravidlo „zdroj pravdy“ pre vybrané atribúty; konflikty schvaľuje NET/ADM s auditnou stopou.
+\end{itemize}
+
+\begin{table}[!htbp]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{40mm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{40mm}}
+\toprule
+\textbf{Okrajový prípad} & \textbf{Ošetrenie v procese} & \textbf{Audit/log (min.)} \\
+\midrule
+Revízia po termíne, následne vykonaná & po zápise výsledku sa stav prepne na \emph{vykonaná}, oneskorenie ostáva reportovateľné & čas, používateľ, pôvodný termín, čas vykonania \\
+\midrule
+Neúspešné doručenie notifikácie & opakovaný pokus a/alebo interné oznámenie; eskalácia pri dlhšom výpadku & výsledok (OK/FAIL), počet pokusov, príjemca \\
+\midrule
+Cyklická väzba zariadení & IS neumožní uložiť cyklus v hierarchii komponentov & pokus o zmenu, používateľ, zamietnutie \\
+\midrule
+Export reportu s veľkým rozsahom & export sa obmedzí parametrami alebo sa generuje postupne/asynchrónne & parametre exportu, čas, používateľ, ID exportu \\
+\bottomrule
+\end{tabularx}
+\caption{Príklady okrajových prípadov a minimálne požiadavky na audit/log.}
+\label{tab:edge-cases}
+\end{table}

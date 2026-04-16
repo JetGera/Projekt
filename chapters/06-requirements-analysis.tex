@@ -235,7 +235,7 @@ Vzťahy medzi navrhovaným IS a externými aktérmi/systémami sú graficky zná
 \node[box, below right=of is] (model) {Hydraulické\\modely\\\cite{EPANET}};
 
 \draw[link] (scada) -- node[sloped, above, font=\scriptsize] {telemetria, alarmy} (is);
-\draw[link] (gis) -- node[right, font=\scriptsize] {poloha, vrstvy (WMS/WFS)} (is);
+\draw[link] (gis) -- node[font=\scriptsize] {poloha, vrstvy (WMS/WFS)} (is);
 \draw[link] (cmms) -- node[sloped, above, font=\scriptsize] {príkazy, zásahy, aktíva} (is);
 
 \draw[link] (idp) -- node[above, font=\scriptsize] {účty, skupiny} (is);
