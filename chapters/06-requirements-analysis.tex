@@ -248,3 +248,173 @@ Vzťahy medzi navrhovaným IS a externými aktérmi/systémami sú graficky zná
 \caption{Kontextový diagram -- okolie navrhovaného systému a hlavné komunikačné/integračné väzby.}
 \label{fig:context}
 \end{figure}
+
+
+
+
+\clearpage
+
+\section{Reprezentácie požiadaviek}
+\subsection{Scenár 1 (Plánovanie revízie)}
+
+\begin{itemize}
+	\item \b{Aktér:} Správca siete
+	\item \b{Popis:} Plánovanie novej revízie zariadenia
+	\item \b{Predpoklady:} Zariadenie je registrované v systéme, používateľ je prihlásený
+\end{itemize}
+
+\subsubsection{Scenár:}
+
+\begin{enumerate}
+	\item používateľ otvorí detail zariadenia
+	\item zvolí možnosť „naplánovať revíziu“
+	\item zadá dátum, rozsah a zodpovednú osobu
+	\item uloží revíziu
+\end{enumerate}
+
+\subsubsection{Výsledok:}
+\begin{itemize}
+	\item revízia je uložená v systéme
+	\item systém môže odoslať notifikáciu
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/1scenar.png}
+    \caption{Use-case diagram pre scenár plánovania revízie.}
+    \label{fig:1scenar}
+\end{figure}
+
+\clearpage
+
+\subsection{Scenár 2 (Vykonanie revízie)}
+
+\begin{itemize}
+	\item \b{Aktér:} Revízny pracovník
+	\item \b{Popis:} Zaznamenanie výsledku revízie
+	\item \b{Predpoklady:} Revízia je naplánovaná, používateľ má oprávnenie
+\end{itemize}
+
+\subsubsection{Scenár:}
+
+\begin{enumerate}
+	\item používateľ otvorí zoznam revízií
+	\item vyberie konkrétnu revíziu
+	\item zadá výsledok (vyhovel / nevyhovel)
+	\item doplní poznámku
+	\item nahrá prílohy (protokol, foto)
+	\item uloží záznam
+\end{enumerate}
+
+\subsubsection{Výsledok:}
+\begin{itemize}
+	\item revízia je uložená ako vykonaná
+	\item aktualizuje sa stav zariadenia
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/2scenar.png}
+    \caption{Use-case diagram pre scenár vykonanie revízie.}
+    \label{fig:2scenar}
+\end{figure}
+
+
+\clearpage
+
+\subsection{Scenár 3 (Servisný zásah)}
+
+\begin{itemize}
+	\item \b{Aktér:} Technik
+	\item \b{Popis:} Vykonanie opravy alebo údržby
+	\item \b{Predpoklady:} Existuje porucha alebo revízia s výsledkom „nevyhovel“
+\end{itemize}
+
+\subsubsection{Scenár:}
+
+\begin{enumerate}
+	\item používateľ otvorí servisný zásah
+	\item nastaví stav „v riešení“
+	\item vykoná opravu
+	\item zapíše vykonané práce
+	\item uvedie použitý materiál
+	\item ukončí zásah
+\end{enumerate}
+
+\subsubsection{Výsledok:}
+\begin{itemize}
+	\item zásah je uložený
+	\item zariadenie môže byť označené ako funkčné
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/3scenar.png}
+    \caption{Use-case diagram pre scenár servisný zásah.}
+    \label{fig:3scenar}
+\end{figure}
+
+
+\clearpage
+
+\subsection{Scenár 4 (Generovanie reportu)}
+
+\begin{itemize}
+	\item \b{Aktér:} Manažér
+	\item \b{Popis:} Vytvorenie reportu o revíziách alebo zásahoch
+	\item \b{Predpoklady:} Existujú dáta v systéme
+\end{itemize}
+
+\subsubsection{Scenár:}
+
+\begin{enumerate}
+	\item používateľ otvorí sekciu reportov
+	\item vyberie typ reportu
+	\item nastaví filtre (dátum, zariadenie, stav)
+	\item klikne „generovať“
+	\item systém zobrazí výsledok
+	\item používateľ exportuje report (PDF/CSV)
+\end{enumerate}
+
+\subsubsection{Výsledok:}
+\begin{itemize}
+	\item report je vygenerovaný a uložený
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/4scenar.png}
+    \caption{Use-case diagram pre scenár generovanie reportu.}
+    \label{fig:4scenar}
+\end{figure}
+
+\clearpage
+
+\subsection{Scenár 5 (Odoslanie notifikácie)}
+
+\begin{itemize}
+	\item \b{Aktér:} Systém (automatický proces)
+	\item \b{Popis:} Informovanie používateľov o udalosti
+	\item \b{Predpoklady:} Existuje naplánovaná alebo oneskorená revízia
+\end{itemize}
+
+\subsubsection{Scenár:}
+
+\begin{enumerate}
+	\item systém kontroluje termíny
+	\item identifikuje blížiacu sa alebo oneskorenú revíziu
+	\item vyberie príjemcov
+	\item odošle notifikáciu (email / interná)
+\end{enumerate}
+
+\subsubsection{Výsledok:}
+\begin{itemize}
+	\item používateľ je informovaný
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/5scenar.png}
+    \caption{Use-case diagram pre scenár odoslanie notifikácie.}
+    \label{fig:5scenar}
+\end{figure}
