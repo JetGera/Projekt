@@ -418,3 +418,188 @@ Vzťahy medzi navrhovaným IS a externými aktérmi/systémami sú graficky zná
     \caption{Use-case diagram pre scenár odoslanie notifikácie.}
     \label{fig:5scenar}
 \end{figure}
+
+\clearpage
+
+\section{Overenie a príprava požiadaviek informačného systému}
+
+\subsection{Stručné zhrnutie}
+
+Nasledujúca doplňujúca časť vychádza z požiadaviek FR-01 až FR-12 a NFR-01 až NFR-08 uvedených v podkladových materiáloch. Z obsahového hľadiska tvoria tieto požiadavky kvalitný a prakticky použiteľný základ pre návrh systému. Obzvlášť dobre pripravené sú požiadavky na evidenciu zariadení, plánovanie a vykonanie revízií, export reportov a rolovo riadený prístup.
+
+Pri ďalšom rozpracovaní sa oplatí jemne spresniť najmä konfiguračné hodnoty notifikácií, rozsah auditovaných operácií, výkonové hranice a parametre obnovy po zlyhaní. Regulačná opora tejto časti zostáva na existujúcich zdrojoch \cite{EUDWD2020,SKVyhlaska912023,UVZPitnaVodaMapy,NISTRBACGlossary,NIST80082R3}. Ako dopĺňajúce metodické zdroje pre vlastnosti požiadaviek, kvalitatívne kritériá, backlog a testovanie sú vhodné najmä \cite{ISO29148,ISO25010,ScrumGuide2020,ISTQBCTFL40}.
+
+\subsection{Verifikácia požiadaviek}
+
+Verifikácia v tejto práci znamená overenie, či je každá požiadavka formulovaná tak, aby bolo možné jednoznačne určiť spôsob testu, očakávaný výsledok a merateľné kritérium. Z metodického hľadiska je dôležité, aby požiadavka viedla k testovateľnému artefaktu a aby kvalitatívne požiadavky mali aspoň minimálne meradlá prijatia.
+
+V posudzovanom dokumente sú funkčné požiadavky prevažne jednoznačné na úrovni toho, čo má systém vykonať, a preto poskytujú veľmi dobrý základ pre testovanie. Pri časti požiadaviek je užitočné doplniť presné hraničné hodnoty alebo prevádzkové limity, aby bolo možné dosiahnuť ešte vyššiu mieru konzistentného hodnotenia.
+
+\footnotesize
+\begin{longtable}{|p{1.8cm}|p{3.2cm}|p{4.3cm}|p{5.0cm}|}
+\caption{Výsledky verifikácie vybraných požiadaviek}\label{tab:verification-requirements}\\
+\hline
+\textbf{ID} & \textbf{Spôsob verifikácie} & \textbf{Merateľné kritérium} & \textbf{Výsledok verifikácie} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Spôsob verifikácie} & \textbf{Merateľné kritérium} & \textbf{Výsledok verifikácie} \\
+\hline
+\endhead
+FR-01 & funkčný test UI + kontrola dát & kartu zariadenia možno uložiť len po vyplnení minimálne: identifikátor, typ, umiestnenie, stav, dátum uvedenia do prevádzky & dobre verifikovateľná; povinné polia sú jasne špecifikované, odporúča sa doplniť formát a unikátnosť identifikátora \\
+\hline
+FR-04 & funkčný test plánovania revízie & revíziu možno uložiť len s termínom, rozsahom a pridelenou zodpovednou osobou; po uložení je viditeľná v harmonograme & veľmi dobre verifikovateľná; pre plnú jednoznačnosť možno doplniť pravidlo budúceho dátumu \\
+\hline
+FR-05 & funkčný test zápisu výsledku revízie & systém uloží výsledok revízie vrátane stavu, poznámky a príloh; záznam je spätne dohľadateľný v histórii zariadenia & dobre verifikovateľná; existencia záznamu je merateľná, pre vyššiu presnosť možno doplniť povinnosť a typ príloh \\
+\hline
+FR-09 & integračný test plánovača + notifikačného kanála & pred termínom revízie sa odošle notifikácia príslušnému používateľovi; v logu je čas, príjemca, kanál a výsledok odoslania & dobre verifikovateľná; požiadavka je jasná, odporúča sa doplniť predstih N dní \\
+\hline
+FR-12 & funkčný test reportingu a exportu & pre zvolený report vzniknú exporty aspoň vo formáte PDF a CSV; export obsahuje rovnakú dátovú množinu podľa zadaného filtra & veľmi dobre verifikovateľná; pre prevádzkovú istotu možno doplniť výkonový limit a maximálny objem dát \\
+\hline
+NFR-01 & bezpečnostný test prihlásenia a oprávnení & neprihlásený používateľ sa k dátam nedostane; prihlásený používateľ vidí len artefakty povolené rolou & veľmi dobre verifikovateľná; pre úplnú konzistentnosť sa odporúča zafixovať testovaciu maticu rolí a oprávnení \\
+\hline
+NFR-02 & bezpečnostný test komunikácie & celý systém je dostupný cez HTTPS; nezabezpečený prístup je blokovaný alebo presmerovaný; prihlasovacie údaje sa neprenášajú po HTTP & veľmi dobre verifikovateľná; pre úplnú špecifikáciu možno doplniť minimálnu verziu TLS a detaily certifikátovej politiky \\
+\hline
+NFR-03 & auditný test kritických operácií & pri vytvorení, úprave, zmene stavu alebo exporte vznikne auditný záznam aspoň s používateľom, časom, objektom a výsledkom operácie & dobre verifikovateľná; princíp je jasný, odporúča sa doplniť úplný zoznam dôležitých operácií \\
+\hline
+NFR-06 & test zálohovania a obnovy & vytvorí sa pravidelná záloha a systém je možné obnoviť do konzistentného stavu bez straty štruktúry dát & dobre verifikovateľná; pre ešte lepšiu merateľnosť sa odporúča doplniť periodicitu záloh, RPO a RTO \\
+\hline
+\end{longtable}
+\normalsize
+
+Z pohľadu ďalšieho spresnenia majú najvyššiu prioritu FR-09, NFR-03 a NFR-06. Doplnenie týchto troch oblastí prinesie rýchly nárast jednoznačnosti a ešte hladší priebeh akceptačného testovania.
+
+\subsection{Validácia požiadaviek}
+
+Validácia odpovedá na otázku, či požiadavky stále zodpovedajú legislatíve, prevádzke a potrebám používateľských rolí. V čase spracovania tejto kapitoly zostáva regulačný základ platný: smernica 2020/2184 je účinná, členské štáty mali transponovať relevantné ustanovenia do 12. januára 2023, časť prechodných povinností dobehla 12. januára 2026 a rámec bol ďalej dopĺňaný delegovanými aktmi EÚ \cite{EUDWD2020,EUDWDDelegated2024}. Slovenská vyhláška 91/2023 upravuje ukazovatele kvality pitnej vody, programy monitorovania a manažment rizík a je účinná od 1. apríla 2023 \cite{SKVyhlaska912023}.
+
+Prevádzková validita je rovnako zachovaná. Oprávnenosť požiadaviek na evidenciu zariadení, revízií, servisných zásahov, reportov a auditnej stopy podporuje aj priebežný monitoring pitnej vody v slovenskej praxi \cite{UVZPitnaVodaMapy}. Pre používateľské roly ADM, NET, TECH, REV a MAN preto požiadavky na register, revízie, zásahy, notifikácie a reporty ostávajú vecne platné; meniť sa budú skôr ich detaily, nie samotná existencia.
+
+\footnotesize
+\begin{longtable}{|p{3.3cm}|p{4.2cm}|p{3.8cm}|p{3.2cm}|}
+\caption{Validita požiadaviek a spúšťače ich revízie}\label{tab:requirements-validity}\\
+\hline
+\textbf{Oblasť požiadaviek} & \textbf{Dôvod platnosti} & \textbf{Predpokladaná platnosť} & \textbf{Spúšťač revízie požiadavky} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Oblasť požiadaviek} & \textbf{Dôvod platnosti} & \textbf{Predpokladaná platnosť} & \textbf{Spúšťač revízie požiadavky} \\
+\hline
+\endhead
+Legislatívna zhoda, monitoring a manažment rizík & vyplýva z požiadaviek na kvalitu pitnej vody, monitoring a riadenie rizík & do ďalšej novely právnych predpisov; formálne kontrolovať minimálne raz ročne & novela smernice, delegovaný akt EÚ, novela vyhlášky, zmena požiadaviek regulátora \\
+\hline
+Evidencia zariadení a väzieb & register je základom pre revízie, servis, reporty aj audit & dlhodobá, spravidla 2--3 roky bez zmeny jadra modelu & zmena dátového modelu, nové typy zariadení, integrácia GIS/CMMS \\
+\hline
+Revízie a servisné zásahy & ide o jadro prevádzky a preukázateľnosť plnenia povinností & dlhodobá; obsah kontrolovať pri každej ročnej revízii procesov & zmena periodicity kontrol, zmena servisného procesu, outsourcing alebo nové protokoly \\
+\hline
+Bezpečnosť, roly a RBAC & potreba minimálnych oprávnení a oddelenia zodpovedností ostáva stabilná & platná priebežne; minimálne ročný review & organizačná zmena, nové roly, externý dodávateľ, SSO/IdP integrácia, bezpečnostný incident \\
+\hline
+Notifikácie a eskalácie & znižujú riziko zmeškaných termínov a oneskorených zásahov & funkčne dlhodobá, konfiguračne 6--12 mesiacov & zmena interných lehôt, veľa falošných upozornení, nový komunikačný kanál \\
+\hline
+Reporty, export a audit & potreba manažérskeho dohľadu a kontroly súladu ostáva trvalá & 12--24 mesiacov pre formát a rozsah; funkčne dlhodobá & nový formát pre regulátora, požiadavka API exportu, nové metadáta alebo archivácia \\
+\hline
+Zálohovanie a obnova & nevyhnutné pre kontinuitu prevádzky & platná priebežne; parametre preskúmať aspoň polročne & zmena infraštruktúry, neúspešný disaster-recovery test, nové RPO/RTO \\
+\hline
+\end{longtable}
+\normalsize
+
+\subsection{Príprava pre návrh a implementáciu}
+
+Prevod požiadaviek do vývojového backlogu má zmysel postaviť na menších, transparentných položkách, ktoré sú dostatočne presné na výber do sprintu a majú spoločné akceptačné kritériá. Takýto prístup znižuje riziko odchýlky implementácie od pôvodnej požiadavky a zároveň zlepšuje prevzatie výsledkov.
+
+\subsubsection*{Epic: Register zariadení}
+\textbf{Väzba:} FR-01, FR-02, FR-03, NFR-03.\\
+\textbf{User story:} Ako správca siete chcem založiť a upravovať kartu zariadenia, aby som mal jednotný register použiteľný pre revízie a servis.
+\begin{itemize}
+\item systém neuloží kartu bez minimálnych povinných údajov,
+\item po uložení je zariadenie vyhľadateľné podľa typu, lokality, stavu a zodpovednej osoby,
+\item každá úprava vytvorí históriu zmien,
+\item zmena zariadenia vytvorí auditný záznam.
+\end{itemize}
+
+\subsubsection*{Epic: Revízie}
+\textbf{Väzba:} FR-04, FR-05, FR-06, NFR-01, NFR-03.\\
+\textbf{User story:} Ako revízny pracovník chcem mať naplánovanú revíziu s termínom a rozsahom, aby som vedel vykonať kontrolu v správnom čase a s úplným záznamom.
+\begin{itemize}
+\item revíziu možno vytvoriť len s termínom, rozsahom a zodpovednou osobou,
+\item po vykonaní možno uložiť výsledok, poznámku a prílohy,
+\item každá revízia sa zobrazí v histórii konkrétneho zariadenia v časovom poradí,
+\item prístup k revízii rešpektuje rolu používateľa.
+\end{itemize}
+
+\subsubsection*{Epic: Servisné zásahy}
+\textbf{Väzba:} FR-07, FR-08, NFR-03.\\
+\textbf{User story:} Ako technik údržby chcem založiť a priebežne dopĺňať servisný zásah, aby bolo možné spätne preukázať vykonané práce, použitý materiál a zodpovednosť.
+\begin{itemize}
+\item zásah možno založiť z podnetu, z poruchy alebo z nevyhovujúcej revízie,
+\item zásah je naviazaný na konkrétne zariadenie a podľa potreby aj na revíziu,
+\item pri zásahu je možné evidovať práce, materiál a zodpovednú osobu,
+\item uzavretie zásahu sa zapíše do auditu.
+\end{itemize}
+
+\subsubsection*{Epic: Notifikácie}
+\textbf{Väzba:} FR-09, FR-10, NFR-01, NFR-02, NFR-03.\\
+\textbf{User story:} Ako správca siete chcem dostávať upozornenia pred termínom a po termíne revízie, aby som vedel včas reagovať na riziko omeškania.
+\begin{itemize}
+\item systém odošle upozornenie pred termínom podľa konfigurovanej hodnoty N,
+\item po prekročení termínu sa vytvorí eskalačné upozornenie,
+\item pri odoslaní sa eviduje čas, kanál, príjemca a výsledok,
+\item notifikáciu nemožno zobraziť používateľovi bez príslušného oprávnenia.
+\end{itemize}
+
+\subsubsection*{Epic: Reporty a audit}
+\textbf{Väzba:} FR-11, FR-12, NFR-03, NFR-07.\\
+\textbf{User story:} Ako manažér chcem generovať report revízií a exportovať ho do PDF a CSV, aby som mal podklady pre riadenie, kontrolu a audit.
+\begin{itemize}
+\item používateľ zvolí obdobie a typ reportu,
+\item systém vygeneruje konzistentný výstup v PDF aj CSV,
+\item report je spätne dohľadateľný podľa typu a dátumu,
+\item generovanie a export reportu vytvoria auditný záznam.
+\end{itemize}
+
+Ak sa backlog bude ďalej spresňovať, odporúča sa doplniť pre každý epic explicitnú Definition of Done, najmä pre bezpečnostné, auditné a exportné časti.
+
+\subsection{Príprava pre testovanie}
+
+Testovacie prípady majú byť naviazané priamo na FR/NFR a majú pokrývať nielen funkčnosť, ale aj rozhrania, bezpečnosť a prevzatie systému používateľom. V metodickej rovine je vhodné odlíšiť testovacie úrovne a typy testov \cite{ISTQBCTFL40}.
+
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{|p{1.2cm}|p{1.8cm}|p{2.0cm}|p{3.2cm}|p{3.0cm}|p{1.3cm}|}
+\caption{Návrh testovacích prípadov nad FR/NFR požiadavkami}\label{tab:test-cases-requirements}\\
+\hline
+\textbf{ID testu} & \textbf{Väzba} & \textbf{Predpoklady} & \textbf{Testovacie kroky} & \textbf{Očakávaný výsledok} & \textbf{Typ} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID testu} & \textbf{Väzba} & \textbf{Predpoklady} & \textbf{Testovacie kroky} & \textbf{Očakávaný výsledok} & \textbf{Typ} \\
+\hline
+\endhead
+TC-F-01 & FR-01 & používateľ NET je prihlásený & otvorí formulár zariadenia, vyplní minimálne polia, uloží záznam & systém uloží kartu zariadenia a zobrazí ju v registri & funkčný \\
+\hline
+TC-F-02 & FR-04 & existuje zariadenie a používateľ NET & vytvorí revíziu, zadá termín, rozsah a zodpovednú osobu, uloží & revízia je uložená v harmonograme s väzbou na zariadenie & funkčný \\
+\hline
+TC-F-03 & FR-05 & existuje naplánovaná revízia a používateľ REV & otvorí revíziu, zapíše výsledok, poznámku a priloží súbor & revízia sa uloží ako vykonaná a je zobrazená v histórii zariadenia & funkčný \\
+\hline
+TC-I-01 & FR-09 & existuje revízia pred termínom; nastavený notifikačný kanál & spustí sa plánovač alebo dávka, systém vyhodnotí blížiaci sa termín & príslušný príjemca dostane notifikáciu a v logu je záznam o odoslaní & integračný \\
+\hline
+TC-I-02 & FR-10 & existuje oneskorená revízia alebo servisný zásah & systém vyhodnotí stav po termíne & revízia alebo zásah sú označené ako po termíne a vznikne eskalačné upozornenie & integračný \\
+\hline
+TC-F-04 & FR-12 & existujú dáta pre report; používateľ MAN & zvolí obdobie, vygeneruje report, exportuje PDF a CSV & oba exporty sú vytvorené a obsahovo zodpovedajú zvolenému filtru & funkčný \\
+\hline
+TC-S-01 & NFR-01 & existujú účty REV a MAN s rozdielnymi rolami & REV sa pokúsi otvoriť objekt mimo svojich oprávnení; MAN otvorí povolený report & nepovolený prístup je zamietnutý, povolený je úspešný & bezpečnostný \\
+\hline
+TC-S-02 & NFR-02 & testovacie prostredie je dostupné zvonka & skúsi otvoriť systém cez HTTP a následne cez HTTPS & prístup je vynútený cez HTTPS; citlivé dáta sa neprenesú po HTTP & bezpečnostný \\
+\hline
+TC-S-03 & NFR-03 & audit je zapnutý & používateľ vytvorí zariadenie, upraví revíziu a vygeneruje report & v audite vzniknú záznamy s aspoň používateľom, časom, objektom a typom operácie & bezpečnostný \\
+\hline
+TC-R-01 & NFR-06 & existuje posledná záloha testovacej databázy & vyvolá sa obnova zo zálohy do čistého prostredia & systém sa obnoví do konzistentného stavu; cieľový čas obnovy sa následne potvrdí v prevádzkových parametroch & obnova \\
+\hline
+TC-A-01 & FR-11, FR-12, NFR-01, NFR-03 & používateľ MAN alebo AUD má príslušné práva & zvolí obdobie, vygeneruje report, exportuje ho a odovzdá ako podklad pre kontrolu & používateľ vie samostatne získať čitateľný a dohľadateľný výstup bez zásahu administrátora & akceptačný \\
+\hline
+\end{longtable}
+\normalsize
+\endgroup
+
+Za minimálnu sadu pred implementáciou do produkcie možno považovať testy TC-F-01 až TC-F-04, TC-I-01, TC-S-01, TC-S-03 a TC-A-01. Pred začiatkom testovania je vhodné doplniť najmä tieto hodnoty: konfigurovaný predstih notifikácie N, zoznam kritických auditovaných operácií, pravidelnosť záloh, prípustnú stratu dát pri obnove a očakávaný čas obnovy systému.
