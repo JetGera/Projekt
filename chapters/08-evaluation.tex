@@ -2,4 +2,38 @@
 
 \chapter{Vyhodnotenie}\label{ch:evaluation}
 
-Vyhodnocovacia časť je kľúčovou časťou záverečnej práce. Tato časť obsahuje vyhodnotenie navrhnutého (vytvoreného) riešenia. Uprednostňované je objektívne vyhodnotenie výsledkov práce, ktoré sa opiera o meranie a štatistické metódy, prípadne matematické dôkazy. V prípade nameraných hodnôt musí autor opísať metódu merania, priebeh merania, výsledky a interpretáciu výsledkov v kontexte riešeného problému a stanovených cieľov. Na základe vyhodnotenia riešenia autor opíše prínosy svojej práce. Vyhodnocovacia časť tvorí zvyčajne ¼ jadra práce.
+Táto kapitola hodnotí navrhnuté riešenie informačného systému pre správu distribúcie pitnej a úžitkovej vody so zameraním na evidenciu revízií filtračných zariadení. Vychádza z problémovej analýzy, formulovaných požiadaviek, návrhu modulov, identifikovaných artefaktov a procesov systému. Keďže práca je zameraná na návrh riešenia, vyhodnotenie sa opiera najmä o mieru splnenia cieľov, konzistentnosť návrhu, odhadovanú realizovateľnosť a prínos pre prevádzku a auditovateľnosť.
+
+\section{Vyhodnotenie splnenia cieľov}
+
+Prvý cieľ práce smeroval k vytvoreniu jednotného registra zariadení a filtračných prvkov vrátane identifikácie, umiestnenia, parametrov, stavu a väzieb medzi objektmi. Tento cieľ je v návrhu pokrytý samostatným modulom registra zariadení a je podporený aj štrukturálnym modelom artefaktov, ktorý zachytáva vzťahy medzi zariadením, filtračným zariadením, revíziou a servisným zásahom. Z pohľadu dokumentácie je tento cieľ splnený na úrovni návrhu, pretože systém počíta s jednotným a stabilným identifikátorom objektov, s históriou zmien a s archiváciou namiesto nebezpečného mazania historických údajov.
+
+Druhý cieľ sa týkal plánovania a evidencie revízií vrátane termínu, zodpovednej osoby, výsledku, protokolu, príloh a nápravného opatrenia. V kapitole o požiadavkách aj v kapitole o procesoch je tento okruh rozpracovaný najpodrobnejšie. Návrh obsahuje plánovanie revízií, evidenciu výsledku, časovú históriu, označovanie revízií po termíne a prepojenie na servisný zásah v prípade nevyhovujúceho výsledku. Z hľadiska cieľov práce ide o jadro riešenia a možno konštatovať, že je navrhnuté úplne a konzistentne.
+
+Tretí cieľ spočíval v podpore evidencie udalostí, servisných zásahov a ich väzby na rizikovo orientovaný monitoring. Tento cieľ je splnený prostredníctvom modulu servisných zásahov, modelu stavov zásahu a procesu, v ktorom môže zásah vzniknúť ako reakcia na revíziu alebo na prevádzkový podnet. Dôležité je, že návrh počíta aj s prepojením na externé systémy, napríklad SCADA ako zdroj read-only alarmov, čím sa zachováva bezpečný prístup k prevádzkovým údajom bez priameho zásahu do technológie.
+
+Štvrtý cieľ bol zameraný na automatické upozorňovanie na blížiace sa alebo prekročené termíny. Tento prvok je v návrhu spracovaný ako samostatný modul notifikácií a zároveň je priamo zapracovaný do procesov systému. Notifikácie sú navrhnuté pred termínom revízie, v deň termínu aj po termíne, čo zodpovedá požiadavke na včasnú reakciu a znižuje riziko zmeškaných činností. V dokumentácii je tento cieľ podopretý aj požiadavkou na konfiguráciu príjemcov podľa roly a zodpovednosti.
+
+Piaty cieľ sa týkal reportov a exportov pre manažérsku kontrolu a audit. V návrhu sa nachádza samostatný modul reportov a exportu s podporou formátov PDF a CSV. Väzba na auditovateľnosť je pritom podstatná: reporty majú byť spätne dohľadateľné, uchovateľné a použiteľné pre manažment aj pre externú kontrolu. Z tohto pohľadu je cieľ splnený na úrovni návrhu funkčnosti aj dátovej stopy.
+
+\section{Vyhodnotenie návrhu}
+
+Z hľadiska architektúry je riešenie postavené modulárne. Kapitola o koncepte riešenia rozdeľuje systém na registre, revízie, servis, notifikácie, reporty, bezpečnosť a integrácie. Toto rozdelenie je vhodné, pretože jednotlivé časti sú logicky oddeliteľné, no zároveň prepojené jednotným dátovým modelom. Moduly sa dajú implementovať iteratívne, bez potreby zásadnej prestavby architektúry, čo znižuje riziko pri budúcom rozvoji riešenia.
+
+Kvalitu návrhu podporuje aj dôsledné rozpracovanie požiadaviek do štruktúrovanej podoby. Funkčné a nefunkčné požiadavky sú formulované tak, aby boli jednoznačné, porovnateľné a overiteľné. Z toho vyplýva, že návrh je použiteľný nielen ako opis budúceho systému, ale aj ako priamy podklad pre implementáciu, testovanie a následné odovzdanie do praxe.
+
+Bezpečnostná časť návrhu je tiež spracovaná primerane rozsahu práce. Použitý model RBAC, dôraz na autentifikáciu, autorizáciu, HTTPS a auditné záznamy vytvárajú predpoklad pre bezpečnú prevádzku v prostredí, kde sa pracuje s prevádzkovými a kontrolnými údajmi. Dôležitým prínosom je aj to, že návrh explicitne odlišuje interných aktérov, externé zainteresované strany a integračné rozhrania, čo uľahčuje budúce nasadenie v reálnom prevádzkovom prostredí.
+
+\section{Odhad realizovateľnosti}
+
+Odhad veľkosti systému ukazuje, že jadro riešenia je pri rozumne veľkom tíme a iteratívnom vývoji realizovateľné. Hrubý modulový odhad predstavuje približne 128 story points pre jadro systému. Alternatívna validácia pomocou Function Point Analysis a COCOMO dáva podobne konzistentný obraz: systém má 113 UFP, po úprave približne 125 FP, a odhad námahy sa pohybuje v rozmedzí približne 34,1 až 41,6 person-months. Z toho vyplýva odporúčaná veľkosť tímu približne štyri až päť členov pri plánovaní na deväť mesiacov.
+
+Tieto odhady nepôsobia ako presný harmonogram, ale ako realistický rámec pre rozhodovanie o rozsahu. Dôležité je, že všetky použité odhady sú medzi sebou konzistentné a zodpovedajú navrhnutému rozsahu funkcií, bezpečnosti aj integrácií. Vzhľadom na to možno riešenie považovať za primerane rozsiahle, ale stále uskutočniteľné.
+
+\section{Prínosy návrhu}
+
+Hlavným prínosom práce je návrh jednotného a auditovateľného informačného systému, ktorý spája evidenciu zariadení, revízií, servisných zásahov, notifikácií a reportov do jedného toku údajov. Tým sa odstraňuje fragmentácia informácií medzi oddeleniami, zlepšuje sa dohľadateľnosť údajov a skracuje sa čas potrebný na orientáciu pri kontrole alebo incidente.
+
+Ďalším prínosom je väzba na legislatívne a prevádzkové požiadavky. Návrh explicitne zohľadňuje potrebu riadenia rizík, evidencie kontrol a podpory auditu v prostredí správy pitnej vody. Súčasne vytvára priestor pre ďalšie rozšírenie o externé systémy, ako sú GIS, SCADA alebo CMMS/EAM, bez toho, aby sa musela meniť základná štruktúra riešenia.
+
+Z pohľadu práce ako celku možno konštatovať, že hlavné ciele boli na úrovni návrhu splnené a že výsledný koncept poskytuje pevný základ pre implementáciu, testovanie a následné rozšírenie.

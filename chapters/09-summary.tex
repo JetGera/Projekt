@@ -2,6 +2,14 @@
 
 \chapter{Záver}\label{ch:summary}
 
-Záver práce obsahuje zhrnutie výsledkov práce s~jasným opisom prínosov a pôvodných (vlastných) výsledkov autora a vyhodnotenie splnenia stanovených cieľov. Je to stručné zhrnutie informácií uvedených v~záverečnej práci. Záver by nemal obsahovať nové informácie.
+V tejto práci bol navrhnutý informačný systém pre správu distribúcie pitnej a úžitkovej vody so zameraním na evidenciu revízií filtračných zariadení. Návrh reaguje na problém rozptýlených údajov, manuálnych evidencií a zložitého dohľadávania informácií pri kontrole alebo incidente. Základnou myšlienkou bolo vytvoriť jednotné, auditovateľné a modulárne riešenie, ktoré prepája zariadenia, revízie, servisné zásahy, notifikácie a reporty do jedného konzistentného systému.
 
-V~závere by mal tiež autor poukázať na prípadné otvorené otázky, ktoré sú nad rámec rozsahu práce a mal by odporučiť ďalšie aktivity na pokračovanie pri riešení problému. Rozsah záveru je minimálne 1 celá strana.
+Výsledkom práce je ucelený návrh, ktorý pokrýva hlavné požiadavky definované v úvodných kapitolách. Bola navrhnutá štruktúra registra zariadení, model revízií, servisných zásahov a notifikácií, ako aj podpora reportovania a exportu údajov. Súčasťou riešenia je aj bezpečnostný rámec založený na autentifikácii, autorizácii podľa rolí, auditných záznamoch a modulárnom prístupe k rozširovaniu funkcionality. Tým sa vytvoril základ pre systém, ktorý je možné ďalej implementovať bez zásadného zásahu do jeho koncepcie.
+
+Prínos práce spočíva najmä v tom, že jednotlivé prevádzkové činnosti nie sú vnímané izolovane, ale ako prepojený proces. Revízia môže vyvolať servisný zásah, servisný zásah môže byť podnetom pre ďalšie vyhodnotenie, notifikácie upozorňujú na termíny a reporty poskytujú podklad pre manažment aj audit. Takýto prístup zlepšuje prehľadnosť prevádzky, podporuje včasnú reakciu na problémy a zvyšuje dôveryhodnosť evidovaných údajov.
+
+Z pohľadu splnenia cieľov možno konštatovať, že práca naplnila hlavný zámer: navrhnúť konzistentný informačný systém pre správu vody a revízií filtračných zariadení, ktorý zohľadňuje prevádzkové potreby aj legislatívne nároky. Odhady veľkosti a náročnosti navyše ukázali, že jadro systému je realisticky realizovateľné v rámci modulárneho a iteratívneho vývoja.
+
+Otvorenou otázkou zostáva samotná implementácia návrhu do funkčného softvérového riešenia. V ďalšom kroku by bolo vhodné dopracovať databázový model, API rozhrania a používateľské rozhranie, a následne overiť správanie systému na reálnych dátach. Osobitnú pozornosť si vyžaduje aj integrácia s externými systémami, najmä s GIS, SCADA a CMMS/EAM, pretože práve tie určujú mieru praktického nasadenia v prevádzke.
+
+Ďalším prirodzeným pokračovaním práce je pilotné testovanie, doladenie pravidiel notifikácií, rozšírenie auditných mechanizmov a dopracovanie používateľskej dokumentácie. Tým by sa návrh mohol posunúť z úrovne koncepčného riešenia do úrovne plnohodnotne využiteľného nástroja pre prevádzkovú prax.
